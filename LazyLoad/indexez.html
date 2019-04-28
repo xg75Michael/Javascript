@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Lazy Loading Images</title>
+
+    <style>
+        img {
+            display: block;
+            width: 100%;
+            height: 700px;
+            margin-bottom: 20px;
+            background: #bbb;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <img data-src="./images/1.jpg" alt="">
+    <img data-src="./images/2.jpg" alt="">
+    <img data-src="./images/3.jpg" alt="">
+    <img data-src="./images/4.jpg" alt="">
+    <img data-src="./images/5.jpg" alt="">
+    <img data-src="./images/6.jpg" alt="">
+    <img data-src="./images/7.jpg" alt="">
+    <img data-src="./images/8.jpg" alt="">
+    <img data-src="./images/9.jpg" alt="">
+
+</body>
+
+<script>
+    var imgs = document.querySelectorAll('img');
+    //console.log(imgs);
+
+    // Check if the img in the view window
+    function ifIn(e) {
+        //console.log('ifIn function start');
+    	var distance = e.getBoundingClientRect();
+    	var viewHeight = window.innerHeight;
+        //console.log('top' + distance.top);
+    	return distance.top <= viewHeight;
+    }
+
+    // If the img is in the view window, load the img
+    function check() {
+        //console.log('check function start');
+    	Array.from(imgs).forEach(function(e) {
+            //console.log('foreach function start');
+    		if (ifIn(e)) {
+                //console.log('loading img nw');
+    			load(e);
+    		}
+    	})
+    }
+
+    // Load Img
+    function load(e) {
+    	if (!e.src) {
+    		var source = e.dataset.src;
+    		e.src = source;
+    	}
+    }
+
+    window.onload = window.onscroll = function () {
+        // excute that function when onscroll
+        check();
+    }
+</script>
+</html>
