@@ -3,7 +3,7 @@
 ###### 基本用法 `######`
 
 ## Styling text
-换行记得在行后添加两个空格。
+换行记得在行后添加两个空格。  
 **Some bold text here.** `** **`  
 *Some italic text here.* `* *`  
 ~~Some strickthrough text here.~~ `~~ ~~`  
