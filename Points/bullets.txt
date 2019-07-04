@@ -149,7 +149,7 @@
 		Map.prototype.size:		返回键值对的数量。
 	Map()继承的方法：
 		Map.prototype.clear():	
--基本类型的值是无法被改变的，只能被重新赋值。
+-基本类型的值是无法被改变的，只能被重新赋值：
 	var str = “abc”;
 	str[0] = 1;
 	str的值仍然是“abc”。
@@ -176,16 +176,51 @@
 		.forEach()
 		.map()
 		.some()
+-函数声明与函数表达式：
+	函数声明和函数表达式基本是一样的功能，区别在于函数声明有hosting，函数表达式则没有。
+	函数没有重载，重复声明会覆盖前者。
+	var func = function func(){}只有在Safari中会导致错误。
 -面试笔试常见重点题：
-	function closeFn() {var count = 0;
-		return function closeFn2() {
-			alert(count++);
+	闭包问题：
+		function closeFn() {
+			var count = 0;
+			return function closeFn2() {
+				alert(count++);
+			}
 		}
-	}
-	var test1 = closeFn(); var test2 = closeFn();
-	test1();test1();test2(); //010
+		var test1 = closeFn(); var test2 = closeFn();
+		test1();test1();test2(); //010
+	arguments.callee:
+		callee有效的实现了递归函数，防止了函数名错误问题。
+		function func(num) {
+			if(num<=1){
+				return 1;
+			} else {
+				return (num*arguments.callee(num-1));
+			}
+		}
+		var test = func(4);
+		alert(test); //24
 
 
+-typeof和instanceof的区别：
+	typeof来判断数据类型，返回值有原始类型，函数，undefined，object。
+	instancof是用来判断变量是否为某个对象的实例，返回值为true，false。
+	相比较typeof，instanceof能区分数组[]和对象{}。
+-.apply()和.call()函数：
+	ECMAScript定义的这两个方法作用是一样的，只不过传参的形式不一样而已。
+	foo.call(this, arg1,arg2,arg3) == foo.apply(this, args) == this.foo(arg1,arg2,arg3);
+	.apply()有两个参数，第一个作为函数上下文的对象，第二个是函数参数所组成的数组。
+	.call()有两个参数，第一个作为函数上下文的对象，第二个是函数参数列表而不是单个数组。
+	两个方法都能改变this的指向为函数上下文的对象。
+	类似的.bind()方法会返回改变后的函数，低版本浏览器没有bind方法。
+-document.ready 和 document.load：
+	原生JS只有load方法，也就是onload事件，当页面所有资源全部加载完成后执行的函数。
+	ready是jQuery事件，当DOM节点创建就绪时可以调用，ready不包括CSS和图片资源。
+-点击链接如何在新窗口打开：
+	<a>tag可以设置target=“_blank”来打开新窗口，但是只会在新标签页中打开。
+	JS添加onclick事件，window.open(url, title[, “windowFeatures”])可以实现新窗口中打开。
+	windowFeatures可选属性，可以有menubar，location，status，scrollvars等（注意浏览器支持问题）。
 
 
 
