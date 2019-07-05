@@ -68,7 +68,7 @@ document.getElementById(“SomeID”).innerHTML = “Welcome to the Home!” // 
  
 |图片|描述|
 |---|---|
-|![百度][BaiduLogo]|短写的方法显示百度Logo|
+|![百度][BaiduLogo]|标识符的方法显示百度Logo|
 
 
 
