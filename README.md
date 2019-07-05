@@ -59,7 +59,8 @@ document.getElementById(“SomeID”).innerHTML = “Welcome to the Home!” // 
 图片的基本书写格式：  
 `![alt](URL title)`  
 例如：  
-![Google](https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png “谷歌图片”)  
+![baidu](http://www.baidu.com/img/bdlogo.gif "百度logo")  
+
 另一种写法需要提前写好标识符，在末尾有写：  
 `[GGLogo]:https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png`  
 ![][GGLogo]  
