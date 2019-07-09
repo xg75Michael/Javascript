@@ -358,7 +358,206 @@ function PersonDur(name, age, job) {
 var friendDur = PersonDur("Michael", 29, "Web Developer");
 friendDur.sayName(); // "Michael"
 // 除了sayName 方法，没有别的方式可以访问其数据
+// 稳妥构造函数的模式和寄生类似，和构造函数prototype 没有什么联系
 
+// 原型链继承
+function SuperType() {
+	this.property = true;
+}
+SuperType.prototype.getSuperValue = function() {
+	return this.property;
+}
+function SubType() {
+	this.subproperty = false;
+}
+// 继承SuperType
+SubType.prototype = new SuperType();
+SubType.prototype.getSubValue = function() {
+	return this.subproperty;
+}
+var instance = new SubType();
+alert(instance.getSuperValue()); // true
+alert(instance.toString()); // [Object Object]
+// SubType 继承了SuperType, SuperType 继承了 Object
+
+// instanceof() 和 isPrototypeOf() 可以检测是否是原型
+alert(instance instanceof Object); // true
+alert(instance instanceof SuperType); // true
+alert(instance instanceof SubType); // true
+alert(Object.prototype.isPrototypeOf(instance)); // true
+alert(SuperType.prototype.isPrototypeOf(instance)); // true
+alert(SubType.prototype.isPrototypeOf(instance)); // true
+// 重写SuperType 中的方法
+SubType.prototype.getSuperValue = function() {
+	return false;
+}
+alert(instance.getSuperValue()); // false
+// 这个实际上是在SubType.prototype 上添加了一个新的getSuperValue 方法
+
+/*
+原型链继承方法不能使用字面量的方法来书写
+比如下面的代码即导致错误
+SubType.prototype = {
+	getSubValue: function() {
+		return this.subproperty;
+	},
+	somtOtherMethod: function() {
+		return false;
+	}
+};
+var  instance = new SubType();
+alert(instance.getSuperValue()); // error
+因为字面量添加新方法的时候会断开实例和原型的关联
+*/
+
+// 借用构造函数 constructor stealing
+function SuperStealing() {
+	this.colors = ["red1", "blue2", "green3"];
+}
+// 在此继承了SuperStealing
+function SubStealing() {
+	SuperStealing.call(this);
+}
+var instanceStealing1 = new SubStealing();
+instanceStealing1.colors.push("black4");
+alert(instanceStealing1.colors); // "red1, blue2, green3, black4"
+var instanceStealing2 = new SubStealing();
+alert(instanceStealing2.colors); // "red1, blue2, green3, black4"
+// 引用类型没有被影响
+function SuperName(name) {
+	this.colors = ["red1", "blue2", "green3"];
+	this.name = name;
+}
+function SubName(name, age) {
+	SuperName.call(this, name);
+	this.age = age;
+}
+// SubName.prototype = new SuperName();
+var instanceName1 = new SubName("Michael", 29);
+alert(instanceName1.name + instanceName1.age); // "Michael29"
+var instanceName2 = new SubName("Gao", 28);
+alert(instanceName2.name + instanceName2.age); // "Gao28"
+
+// combination inheritance
+function SuperComb(name) {
+	this.name = name;
+	this.colors = ["red1", "blue2", "green3"];
+}
+SuperComb.prototype.sayName = function() {
+	alert(this.name);
+};
+function SubComb(name, age) {
+	// 继承属性
+	SuperComb.call(this, name);
+	this.age = age;
+}
+
+// 继承方法
+SubComb.prototype = new SuperComb();
+SubComb.prototype.sayAge = function() {
+	alert(this.age);
+};
+var instanceComb1 = new SubComb("Michael", 29);
+instanceComb1.colors.push("black4");
+alert(instanceComb1.colors); // "red1, blue2, green3, black4"
+instanceComb1.sayName(); // "Michael"
+instanceComb1.sayAge(); // 29
+var instanceComb2 = new SubComb("Gao", 28);
+alert(instanceComb2.colors); // "red1, blue2, green3"
+instanceComb2.sayName(); // "Gao"
+instanceComb2.sayAge(); // 28
+var instanceComb3 = new SubComb();
+alert(instanceComb3.colors); // "red1, blue2, green3"
+instanceComb3.sayName(); // undefined
+instanceComb3.sayAge(); // undefined
+
+// prototypal inheritance
+function objectProto(o) {
+	function F(){}
+	F.prototype = o;
+	return new F();
+}
+var personProto = {
+	name: "Michael",
+	friends: ["Sean", "Chaois", "Lee"]
+};
+var anotherPerson = objectProto(personProto);
+anotherPerson.name = "AnotherMichael";
+anotherPerson.friends.push("NewFriend");
+var anAnotherPerson = objectProto(personProto);
+anAnotherPerson.name = "AnAnMichael";
+anAnotherPerson.friends.push("New2Friend2")
+alert(personProto.friends); // "Sean, Chaois, Lee, NewFriend, New2Friend2"
+// 这种方法事实上是创建了两个personProto 的副本
+// 共享其中的引用friends 类型属性
+
+// ECMAScript5 新增的Object.create() 方法
+var personCreate = {
+	name: "Michael",
+	friends: ["Sean", "Chaois", "Lee"]
+};
+var anotherCreate = Object.create(personCreate);
+anotherCreate.name = "AnMichael";
+anotherCreate.friends.push("AnNewFriend");
+var anAnotherCeate = Object.create(personCreate);
+anAnotherCeate.name = "AnAnMichael";
+anAnotherCeate.friends.push("AnAnNewFriend");
+alert(personCreate.friends); // "Sean, Chaois, Lee, AnNewFriend, AnAnNewFriend"
+
+// Object.create() 可以接受两个参数，第二个参数和defineProperty() 类似
+var anotherPersonSecond = Object.create(personCreate, {
+	// 同名属性将覆盖前者
+	name: {
+		value: "ReplaceMichael"
+	}
+});
+alert(anotherPersonSecond.name); // "ReplaceMichael"
+
+// 寄生式继承parasitic
+function createAnother(ori) {
+	var clone = objectProto(ori);
+	clone.sayHi = function() {
+		alert("hi");
+	};
+	return clone;
+}
+var personParaInher = {
+	name: "Michael",
+	friends: ["Sean", "Chaois", "Lee"]
+};
+var anotherParasitic = createAnother(personParaInher);
+anotherParasitic.sayHi(); // "hi"
+
+// 寄生组合式继承
+function SuperParaMix(name) {
+	this.name = name;
+	this.colors = ["red1", "blue2", "green3"];
+}
+SuperParaMix.prototype.sayName = function() {
+	alert(this.name);
+};
+function SubParaMix(name, age) {
+	SuperParaMix.call(this, name);
+	this.age = age;
+}
+// SubParaMix.prototype = new SuperParaMix();
+// SubParaMix.prototype.constructor = SubParaMix;
+function inheritPrototype(subType, superType) {
+	var prototype = objectProto(superType.prototype); // 创建对象
+	prototype.constructor = subType; // 增强对象
+	subType.prototype = prototype; // 	指定对象
+}
+inheritPrototype(SubParaMix, SuperParaMix);
+SubParaMix.prototype.sayAge = function() {
+	alert(this.age);
+}
+var testParaMix = new SubParaMix("AA", 11);
+testParaMix.sayName(); // "AA"
+alert(testParaMix.colors); // "red1, blue2, green3"
+alert(testParaMix instanceof SubParaMix); // true
+alert(testParaMix instanceof SuperParaMix); // true
+alert(SuperParaMix.prototype.isPrototypeOf(testParaMix)); // true
+alert(SubParaMix.prototype.isPrototypeOf(testParaMix)); // true
 
 
 
