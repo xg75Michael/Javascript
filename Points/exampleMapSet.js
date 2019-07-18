@@ -1,4 +1,4 @@
-// Map()
+// Map() 一种对象， 值-值对应， 对于键没有任何要求， 完善了Hash结构
 var map1 = new Map([['a','keya'],['b','keyb'],['c','keyc']]);
 var map11 = new Map([['a','keya'],['b','keyb'],['c','keyc']]);
 var map2 = new Map();
@@ -28,7 +28,7 @@ console.log(map2.get('b')); // undefined
 console.log(map1.clear()); // undefined
 console.log(map1); // Map {}
 
-// Set()
+// Set() 类似数组，是数据的一种结构
 // only key, no values, no repeat
 var set1 = new Set(['a', 'b', 'c']);
 var set11 = new Set(['a', 'b', 'c']);

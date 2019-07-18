@@ -176,6 +176,9 @@
 		.forEach()
 		.map()
 		.some()
+-someFunction()()():
+	someFunction中需要return另一个function2中return另一个function3。
+	这个就意味着直接执行了“孙函数”。
 -函数声明与函数表达式：
 	函数声明和函数表达式基本是一样的功能，区别在于函数声明有hosting，函数表达式则没有。
 	函数没有重载，重复声明会覆盖前者。
