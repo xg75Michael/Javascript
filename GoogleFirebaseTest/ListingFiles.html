@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Testing Firebase</title>
+</head>
+<body>
+  <h1>This is testing listAll()</h1>
+  <button onclick="showURLList()">Click to show URL list</button>
+  <p id="MyURLs"></p>
+  <img style="height: 800px;" src="" id="myImg">
+</body>
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/6.3.5/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/6.3.5/firebase-storage.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#config-web-app -->
+
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyAQzGJlKMlTGWvh95y9G4LuiKJphP3CxqQ",
+    authDomain: "exgravityinfo.firebaseapp.com",
+    databaseURL: "https://exgravityinfo.firebaseio.com",
+    projectId: "exgravityinfo",
+    storageBucket: "exgravityinfo.appspot.com",
+    messagingSenderId: "941545108852",
+    appId: "1:941545108852:web:48fabf502f1dd1be"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  var storage = firebase.storage();
+  var storageRef = storage.ref();
+  var listRef = storageRef.child('homeCarouselImage');
+  var myUrlList = [];
+  listRef.listAll().then(function(res) {
+    res.items.forEach(item => {
+      item.getDownloadURL().then(response => {
+        myUrlList.push(response);
+      })
+    })
+  }).catch(error => console.log('Error: ' + error))
+
+  // define showURLList() function
+  function showURLList() {
+    for (let i=0; i<myUrlList.length; i++) {
+      document.getElementById('MyURLs').append(myUrlList[i] + '\n');
+    }
+  }
+
+  
+</script>
+  
+</script>
+</html>
