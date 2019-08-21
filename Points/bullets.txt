@@ -1,4 +1,25 @@
 //****浏览器
+-跨域问题：
+	why: 跨域的限制其实是浏览器的同源策略，限制了不同源文档和脚本的加载，隔离了恶意文件的安全机制。
+		比如CSRF（跨站请求伪造）攻击方式: 恶意B网站利用用户未登出的cookie来请求A网站获取信息资源。
+			防御方法： 服务端添加Hash值验证，简单有效。
+	how: 	- JSONP： 通过<script>没有跨域限制的漏洞来进行跨域请求，服务端需要做一定的支持。只支持GET方法。
+			（AJAX： 类似JSONP，但是它属于同源策略。）
+		- CORS： 需要浏览器和后端的同时支持，分为简单请求和复杂请求。
+		- postMessage： 由H5提供的API： targetWindow.postMessage(message, targetOrigin, [transfer])
+			可以添加监听事件来接收数据： 	
+				window.addEventListener("message", receiveMessage, false)
+				function receiveMessage(event) {var origin= event.origin; console.log(event);}
+				console中的data就是从其他窗口发过来的消息；
+				type是发送消息的类型；
+				source是发送消息的窗口对象；可以用来验证发送网站；
+				origin是发送消息的窗口的源；可以用来验证发送网站；
+		- Websocket： 简历websocket之后达到双向通信（HTTP只是客户端发送给服务端），建立在TCP协议之上，与HTTP兼容，高效，没有同源限制。
+		- Node中间代理： 跨域只是限制浏览器，所以使用服务器从中间代理发送和接收请求将没有这个限制。
+		- nginx反向代理： 类似Node中间代理。
+		- window.name + iframe： 实际上使用iframe跨域之后用window.name(2M)来存储信息，然后再改变iframe中src来回归本地从而避开同源限制。
+		- location.hash + iframe: iframe的src中添加#idontloveyou信息，window.onhashchange来触发事件。
+		- document.domain + iframe： 只适用于二级域名相同的情况，强制设置document.domain为example.com。
 -性能优化方法：
 	减少http请求，合理运用浏览器缓存。
 	使用压缩HTML，CSS，JS文件。
