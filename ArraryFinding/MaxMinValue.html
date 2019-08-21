@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Max and Min value in an Array</title>
+</head>
+<body>
+	<h1>Take a look at console.</h1>
+</body>
+<script>
+	// using sort()
+	var arrSort = [12, 23, 42, 66, 33, 1, 2, 95, 32];
+	arrSort.sort(function(a, b) {
+		return a-b;
+	});
+	console.log('sort() Min value: ' + arrSort[0]);
+	console.log('sort() Max value: ' + arrSort[arrSort.length-1]);
+	console.log('------------ sort() ending ------------------------');
+
+	// compare with another value
+	var arrCompare = [12, 23, 42, 66, 33, 1, 2, 95, 32];
+	var compareMax = arrCompare[0];
+	var compareMin = arrCompare[0];
+	for(var i=0; i<arrCompare.length; i++) {
+		var curValue = arrCompare[i];
+		curValue < compareMin ? compareMin = curValue : null;
+		curValue > compareMax ? compareMax = curValue : null;
+	}
+	console.log('compare Min value: ' + compareMin);
+	console.log('compare Max value: ' + compareMax);
+	console.log('------------ compare ending ------------------------')
+
+	// Math.max and Math.min
+	var arrMathMM = [12, 23, 42, 66, 33, 1, 2, 95, 32];
+	var mathMax = Math.max.apply(null, arrMathMM);
+	var mathMin = Math.min.apply(null, arrMathMM);
+	console.log('Math.min value: ' + mathMin);
+	console.log('Math.max value: ' + mathMax);
+	console.log('------------ Math.max/min ending ------------------------')
+
+	// ES6 ...arr
+	var ESarr = [12, 23, 42, 66, 33, 1, 2, 95, 32];
+	var ESMax = Math.max(...ESarr);
+	var ESMin = Math.min(...ESarr);
+	console.log('ES6 ... Max value: ' + mathMin);
+	console.log('ES6 ... Min value: ' + mathMax);
+	console.log('------------ ES6 ... ending ------------------------')
+
+	// eval
+	var arrEval = [12, 23, 42, 66, 33, 1, 2, 95, 32];
+	var evalMax = eval("Math.max(" + arrEval.toString() + ")");
+	var evalMin = eval("Math.min(" + arrEval.toString() + ")");
+	console.log('eval() Max value: ' + evalMin);
+	console.log('eval() Min value: ' + evalMax);
+	console.log('------------ eval() ending ------------------------')
+
+</script>
+</html>
