@@ -1,0 +1,42 @@
+# JavaScript 教程
+## https://wangdoc.com/javascript/index.html
+## 入门篇
+- Label:
+	```
+	labelName: 
+	statement(multiple loop);
+	```
+	Can use with break labelName; to make all the statement break.
+
+## 数据类型
+- typeof:
+	return `number`, `string`, `boolean`, `function`, `undefined`, `object`
+	`if(someVariable){//…}` will give error is someVariable not defined
+	Recommendation: `if(typeof someVariable === “undefined”){//…}`
+- Boolean: 
+	undefined, null, false, 0, NaN, “”, ‘’ == false;
+	[] == true;
+	{} == true;
+- Object：
+	`Object.keys(obj)`: return all keys in obj
+	delete: 
+		`delete obj.notExist; // return true`
+		Only when configurable: false, delete obj… // return false
+	with:	```
+		var obj = {p1:1,p2:2};
+		with (obj) {
+			p1=4;
+			p2=5;
+		}
+		// equal to
+		obj.p1=4; obj.p2=5;
+		```
+		Not recommend to use `with`, `with` may create global variable when obj not has it.
+- Function:
+	`var f = function f() {}; // This way is easy for call f inside of f();`
+	`new Function(‘x’,’y’,’return x+y;’); // Last one is function body;`
+	Could use `arguments` and `switch` to write Function Overload;
+	函数的作用域是定义时的作用域，不是执行时的作用域。
+- Array:
+	Array can have properties and not effect to `.length`;
+		`var a=[]; a[“p”]=“abc”; console.log(a.length) // 0`
