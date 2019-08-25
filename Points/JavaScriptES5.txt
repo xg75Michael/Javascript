@@ -173,11 +173,37 @@
 			Object.keys(a) // [“0”, “1”, “2”];
 			Object.getOwnPropertyNames(a) // [“0”, “1”, “2”, “length”] 
 			```
-		`Object.getOwnPropertyDescriptor()` 获取某个属性的描述对象；
-
-
-
-
+		`Object.getOwnPropertyDescriptor(obj, ‘propertyName’)` 获取某个属性的描述对象；
+		`Object.defineProperty(obj,{})` 通过描述对象，定义某个属性；
+		`Object.defineProperties(obj,{ , })` 通过描述对象，定义多个属性；
+		`Object.preventExtensions(obj)` 防止对象扩展，添加新属性无效，属性可以更改；
+		`Object.isExtensible(obj)` 判断对象是否可扩展，返回true/false；
+		`Object.seal(obj)` 禁止对象配置，删除返回`false`，属性可更改，`configurable: false`；
+		`Object.isSealed(obj)` 判断是否禁止，返回true/false；
+		`Object.freeze(obj)`  禁止对象配置，删除返回`false`，属性不可更改，`configurable: false`；
+		`Object.isFrozen(obj)` 判断是否冻结，返回true/false；
+	Object主要的实例方法（继承）：
+		`Object.prototype.valueOf()` 返回当前对象对应的值,如`obj1.valueOf() === obj1`;
+		`Object.prototype.toString()` 返回对象的字符串形式，通常返回`[object, Object]`;
+			数组，字符串，函数，Date对象都有自定义的`toString`覆盖了原形的`toString`方法；
+				比如`(function() {return 123;}).toString(); // “function() {return 123;}”`
+			利用`toString()`判断数据类型，调用`Object.prototype.toString.call(value)`返回类型：
+				数值：返回`[object Number]`;
+				字符串：返回`[object String]`;
+				布尔值：返回`[object Boolean]`;
+				Undefined：返回`[object Undefined]`;
+				null：返回`[object Null]`;
+				数组：返回`[object Array]`;
+				arguments：返回`[object Arguments]`;
+				函数：返回`[object Function]`;
+				Error：返回`[object Error]`;
+				Date：返回`[object Date]`;
+				RegExp：返回`[object RegExp]`;
+				其他对象：返回`[object Object]`;
+		`Object.prototype.toLocaleString()`返回字符串，返回结果同上，多一个接口方便实现地区版的`toString()`;
+			比如日期： `var date = new Date(); date.toString() === date.toLocaleString() // false`
+		`Object.prototype.hasOwnProperty()` 接收一个字符串作为参数，返回true/false表示对象自身是否有该属性;
+			`var obj = {name: “Michael”}; obj.hasOwnProperty(‘name’) // true`
 
 
 
