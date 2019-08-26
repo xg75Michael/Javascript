@@ -204,6 +204,134 @@
 			比如日期： `var date = new Date(); date.toString() === date.toLocaleString() // false`
 		`Object.prototype.hasOwnProperty()` 接收一个字符串作为参数，返回true/false表示对象自身是否有该属性;
 			`var obj = {name: “Michael”}; obj.hasOwnProperty(‘name’) // true`
+- 属性描述对象
+	属性描述对象共有6个属性：
+		```
+		{
+			value: 123,
+			writable: false,
+			enumerable: true,
+			configurable: false,
+			get: undefined,
+			set: undefined
+		}
+		```
+		可以使用`Object.defineProperty(obj, “name”, {get: function() {return 123}})`来添加属性；
+		也可以使用`Object.defineProperties()`来添加多个属性；
+		`Object.getOwnPropertyNames()` 可以遍历全部属性名，不管是否可遍历；
+		`Object.prototype.propertyIsEnumerable()` 返回true/false来判断是否可遍历，继承的属性都返回false;
+	当`enumerable`为`false`的时候，下面三个操作不会得到该属性： 
+		`for (key in obj)` 循环；
+		`Object.keys(obj)` 方法；
+		`JSON.stringify(obj)` 方法；
+	`get`和`set`适合定义属性的值依赖对象内部数据的场合，`get`不接受参数，`set`只接收一个参数即属性的值；
+	利用`Object.defineProperty()`来拷贝对象：
+		```
+		var extend = function(to, from) {
+			for (var prop in from) {
+				Object.defineProperty(to, prop, Object.getOwnPropertyDescriptor(from, prop));
+			}
+			return to;
+		}
+		extend({}, {get a(){return 123}}) // {get a() {return 123}}
+		```
+	局限性：
+		`Object.preventExtensions()`, `Object.seal()`, `Object.freeze()`这三个方法只能改变对象本身，不能控制原型；
+		所以可以改变原型来改变被`.freeze()`的对象：
+			```
+			var obj = new Object();
+			Object.freeze(obj);
+			var proto = Object.getPrototypeOf(obj);
+			proto.t = ‘hello’;
+			obj.t; // “hello”
+			```
+			可以把`obj`的原型也冻结住才能彻底冻结；
+		如果属性值是对象，冻结只能冻结指向的对象，不能冻结对象本身内容：
+			```
+			var obj = {foo:1, bar: [‘a’,’b’]};
+			Object.freeze(obj);
+			obj.bar.push(‘c’);
+			obj.bar; // [“a”,”b”,”c”]
+
+
+- Array对象：
+	`Array`构造函数在不同参数的时候行为不一样，所以建议使用字面量；
+		`new Array(2)` // [empty * 2]
+		`new Array(1,2,3) // [1,2,3]`
+	静态方法： 
+		`Array.isArray(arr)` 返回true/false来说明是否是数组，此方法弥补了`typeof`的不足；
+			```	
+			var arr = [1,2,3];
+			typeof arr; // “object”
+			Array.isArray(arr); // true
+			```
+	实例方法：
+		`arr.valueOf()`和`arr.toString()` 所有对象都拥有的方法，返回数组本身和字符串形式；
+		`arr.push()` 末端添加元素， 返回数组长度，改变原来数组；
+		`arr.pop()` 删除最后一个元素，返回被删除的元素，改变原来数组；
+		`arr.unshift()` 在第一个位置添加元素，返回数组长度，改变原来数组；
+		`arr.shift()` 删除数组第一个元素，返回被删除的元素，改变原来数组；
+		`arr.join()` 接收一个参数作为分隔符，返回字符串形式，以分隔符分隔每个元素，默认逗号为分隔符，不改变原数组；
+			`Array.prototype.join.call(‘abc’, ‘|’); // “a|b|c”`
+		`arr.concat(arr2)` 合并多个数组，返回新数组，原数组不变；
+			可以使用`.concat()`方法前拷贝数组；
+		`arr.reverse()` 颠倒排列数组元素，返回改变后的数组，改变原数组；
+		`arr.slice(start, end)` 提取数组一部分，返回新数组，原数组不变；参数如果是负数则倒着数`(-1)`即倒数第一个；
+			通过`Array.prototype.slice.call({0:’a’,1:’b’,length:2})`来把类数组的对象转换成数组；
+		`arr.splice(start, count, add1,add2,...)` 删除部分数组并添加新成员，返回被删除的数组，改变原来的数组；
+		`arr.sort()` 数组排序，默认按照字典顺序，改变原数组；
+			`[10111, 110, 111].sort(); // [10111,110,111]`
+			`[10111, 110, 111].sort((a,b)=>{return a-b}); // [110,111,10111]`
+		`arr.map()` 将所有成员依次传入参数函数，可选传入第二个参数来绑定回调函数内部的`this`，返回新数组，不改变原来数组；
+			`.map()`不会跳过`undefined`,’null’，但是会跳过空位；
+			参数函数有三个参数：
+			`[1,2,3].map((elem,index,arr)=>{return elem*index}); // [0,2,6]`
+			第二个参数绑定`this`：
+			```
+			var arr = [‘a’,’b’,’c’];
+			[1,2].map(function(e) {
+				return this[e];
+			}, arr);	//[‘b’,’c’]
+			```
+		`arr.forEach()` 依次执行函数，和`.map()`很相似，参数一样，此方法为了操作数据并不是为了返回值，不改变原来数组；
+			该方法无法中断执行，会跳过`undefined`,`null`但不跳过空位；
+			`[,null,undefined,2].forEach((e)=>console.log(e)); // null  undefined  2`
+		`arr.filter()` 方法过滤数组成员，返回满足条件的数组，不改变原来数组；
+			`[1,2,3,4,5].filter((el,index,arr)=>{return el%2 ===0}); // [2,4]`
+		`arr.some()` 方法返回布尔值，只要有一个成员返回`true`，该方法就返回`true`;
+			空数组返回`false`;
+		`arr.every()` 方法返回布尔值，所有成员都返回`true`，该方法才会返回`true`;
+			空数组返回`true`;
+		`arr.reduce()`和`arr.reduceRight()` 都是依次处理数组的每个成员，只是处理方向不同，返回最终累计的值；
+			接收4个参数： 累计变量，当前变量，当前位置，原数组， 前两个是必须的；
+			可以指定初始值：
+			`[1,2,3,4,5].reduce((a,b)=>a+b,100); // 115`
+			可以利用此方法找出字符串最长的数组成员：
+			`function findLongest(arr) {
+				return arr.reduce(function(longest, next) {
+					return next.length>longest.length ? next : longest;
+				}, ‘’);
+			}`
+		`arr.indexOf()` 返回第一次出现的位置，可选第二参数表示开始的位置，如果没有返回`-1`;
+		`arr.lastIndexOf()` 返回最后一次出现的位置，可选第二个参数表示开始的地方（之后往左数），如果没有返回`-1`;
+			前面上个方法都是采用`===`严格相等进行比较，所以不能搜索`NaN`（不等于自身）；
+		由于很多数组方法返回的还是数组，所以可以链式使用：
+			```
+			var someArr = [
+				{name: ‘MM’, email: ‘ttt@example.com’, age: 22},
+				{name: ‘GG’, email: ‘xxx@example.com’, age: 11},
+				{name: ‘SS’, email: ‘aaa@example.com’, age: 33}
+			];
+			someArr
+			.map(e=>e.email)
+			.filter(email=>/^t/.test(email))
+			.forEach((item)=>console.log(item));
+			// “ttt.example.com”
+			```
+		
+
+
+
 
 
 
