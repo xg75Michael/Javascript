@@ -328,7 +328,92 @@
 			.forEach((item)=>console.log(item));
 			// “ttt.example.com”
 			```
-		
+- 包装对象：
+	使用`new Number()`,`new String()`,`new Boolean()`可以把这三个原始数据包装成`Object`;
+	实际上某些场合原始类型的值会自动当作包装对象调用：
+		`’abc’.length; // 3`
+		上面的`’abc’`并不是对象，但是可以调用`length`属性，说明JS自动将它转换为包装对象；
+- Boolean对象：
+	`Boolean`作为JS的3个包装对象之一，一定要区别前面是否有`new`关键字；
+		`new Boolean(false) === Boolean(false); // false`
+		`var b = new Boolean(true); typeof b // “object”`
+- Number对象：
+	同上，需要区分是否有`new`关键字；
+		`Number(true); // 1`调用函数把`true`转换成数字类型`1`；
+	静态属性：
+		`Number.POSITIVE_INFINITY` 正的无限，指向`Infinity`;
+		`Number.NEGATIVE_INFINITY` 负的无限，指向`-Infinity`;
+		`Number.NaN` 非数值，指向`NaN`;
+		`Number.MIN_VALUE`,`-Number.MIN_VALUE`;
+		`Number.MAX_SAFE_INTEGER`,`Number.MIN_SAFE_INTEGER`；
+	实例方法：
+		`Number.prototype.toString()` 接收一个参数，返回数值为字符串形式；
+			不能将其他进制的数字转换成十进制，需要用`parseInt()`方法；
+		`Number.prototype.toFixed()` 接收一个参数表示小数位数，转换成小数形式返回字符串，注意四舍五入不定问题；
+		`Number.prototype.toExponential()` 参数为小数位数，转换成科学计数法形式，返回字符串；
+		`Number.prototype.toPrecision()` 参数有效数字位数，返回字符串；
+- String对象：
+	同上，注意`new`关键字；
+	静态方法：
+		`String.fromCharCode()` 参数是一个或多个数值，返回对应的Unicode，字符串形式；
+			`String.fromCharCode(104,101,108,108,111); // “hello”`
+	实例属性：
+		`String.prototype.length` 返回长度；
+	实例方法：
+		`String.prototype.charAt()` 返回该位置字符,没有返回空字符；
+			`’abc’.charAt(3); // “”`
+		`String.prototype.charCodeAt()` 将字符转换成Unicode，负数或大于长度返回`NaN`；
+		`String.prototype.concat()` 连接两个字符串，返回新的字符串，不改变原来字符串；
+			`’a’.concat(‘b’, ‘c’); // “abc”`
+			注意这两个的区别：
+			`’’.concat(1, 2, ‘3’); // “123”`
+			`1 + 2 + ‘3’; // “33”`
+		`String.prototype.slice()` 返回切割字符串，参数可负，不改变；
+		`String.prototype.substring()` 返回取出的字符串，不改变原来字符串；
+			第一个参数是开始的位置，第二个参数的结束的位置；
+			如果第二个参数大于第一个参数，则互换参数的位置；
+			如果参参数是负的，则自动转为0；
+			建议优先使用`slice`方法；	
+		`String.prototype.substr()`取出字符串并返回，不改变原字符串；
+			第一个参数是开始的位置，第二个参数是字符串长度；
+			第一个参数如果是负数则表示倒数；
+			第二个参数如果是负数则转换为0，结果为空字符串；
+		`String.prototype.indexOf()` 第二个参数为开始的位置，返回第一个出现的位置，返回`-1`表示不匹配；
+		`String.prototype.lastIndexOf()`同上，从尾部开始；
+		`String.prototype.trim()` 去掉字符串两端的空格，返回新的字符串，不改变原字符串；
+		`String.prototype.toLowerCase()`全部转为小写；
+		`String.prototype.toUpperCase()`全部转为大写；
+		`String.prototype.match()` 确定原字符串是否匹配某字符串，返回一个数组，成员为第一个匹配的字符串；
+			没找到匹配返回`null`;
+			返回的数组有`index`属性表示匹配字符串开始位置和`input`属性表示原始字符串；
+			可以使用正则表达式作为参数；
+		`String.prototype.search()` 返回匹配的第一个位置，返回`-1`表示没找到，可用正则；
+		`String.prototype.replace(‘a’, ‘b’)`替换匹配的字符串，一般只替换第一个匹配，可用正则；
+		`String.prototype.split()`返回分割后字符串组成的数组，可正则，第二个参数为数组最大成员数;
+			如果参数为空字符串`’ ’`则返回每个字符组成的数组；
+			如果参数为空，则返回唯一成员是原字符串的数组；
+			如果满足分割规则两部分紧挨着，则中间返回空数组成员；
+				`’a||b|c’.split(‘|’); // [“a”, “”, “b”, “c”]`
+			开头或者结尾也返回空数组成员；
+		`String.prototype.localeCompare()` 比较两个字符串，`0`表示相等，`1`表示第一个大，`-1`表示第一个小；
+			最大的特点是使用自然语言顺序，并不使用Unicode做比较；
+			第二个参数可以选择语言，默认英语；
+			
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
