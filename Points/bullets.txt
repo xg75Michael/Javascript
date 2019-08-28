@@ -252,8 +252,17 @@
 	<a>tag可以设置target=“_blank”来打开新窗口，但是只会在新标签页中打开。
 	JS添加onclick事件，window.open(url, title[, “windowFeatures”])可以实现新窗口中打开。
 	windowFeatures可选属性，可以有menubar，location，status，scrollvars等（注意浏览器支持问题）。
-
-
+-MVC模式:
+	最常见的软件框架模式之一，Model(模型),View(视图),Controller(控制)。 V->C->M->V->C->M...的顺序
+	实际往往采用更灵活的方式，比如Backbone.js，用户可以直接由View要求Model改变状态。
+	用户看到的是View，程序的外壳，提供操作界面。最底层是Model，数据的操作。中间是Controller，负责从视图输入指令，从数据层操作数据。
+	把软件分为3个主要的部分，相互独立，所以可以分别开发或者更换。
+-MVP:
+	Model,View,Presenter.
+	V与M不发生联系，都通过P来传递，P非常厚，所有逻辑都部署在这里。
+-MVVM:
+	Model,View,ViewModel.
+	与MVP唯一区别是它采用双向绑定，View的变动自动反映在ViewModel上。
 
 
 
