@@ -138,19 +138,19 @@
 	* 事件驱动脚本语言： 响应鼠标单击，下滑页面等。
 	* 响应需求事件： 简化了表单输入验证。
 ### ES6新增内容：
-	* `const`和`let`变量。
-	* 模版字面量。使用``反单引号，可以使用`${expression}`来表示占位符。
+	* const和let变量。
+	* 模版字面量。使用反单引号，可以使用${expression}来表示占位符。
 	* 箭头函数。
 	* JavaScript类。
 	* 函数参数的默认值。
-	* 数组和对象的解构，`arr=[1,2,3,]; [a,b,c]=arr; console.log(a,b,c); //1,2,3`
-	* 展开运算符，用（...）表示。 `var names=[“A”,”B”,”C”];console.log(…names); //ABC`
+	* 数组和对象的解构，arr=[1,2,3,]; [a,b,c]=arr; console.log(a,b,c); //1,2,3
+	* 展开运算符，用（...）表示。 var names=[“A”,”B”,”C”];console.log(…names); //ABC
 	* (…vals)可以用于参数对象，表示剩下的所有参数。
 ### ES6箭头函数=>的特点：
 	* 简洁，但是没有自己的this（不会改变原本的绑定），arguments，super，new.target。
 	* 无法使用new来用作构造器。没有prototype属性。
 	* 返回对象字面量的时候需要加小括号。
-	* 箭头函数闭包示例：`var add = (i=0)=>()=>(++i);var test=add(); test(); //1`
+	* 箭头函数闭包示例：var add = (i=0)=>()=>(++i);var test=add(); test(); //1
 ### ES6 Promises是什么：
 	* 本身是一个对象，有pending，resolved，rejected三个状态，无论失败与否都会有“答复”。
 	* 异步编程的一种解决方案，最早由社区提出实现，后ES6写进了语言标准。
@@ -160,20 +160,20 @@
 	* Object键只能是字符串，而Map可以是任意类型。
 	* Map的键是跟内存地址绑定的，可以拥有相同值的引用类型作为键（扩展别人库的时候很方便），如果键是简单类型===视为一个键（NaN为同一键）。
 	* Map()简单的实例： 
-	    ```
+	    
 	    var mm = new Map([[‘name’,’Michael’],[‘time’,’29’]]);
 	    mm.size; //2
 	    mm.has(‘name’); //true
 	    mm.get(‘name’); //“Michael”
 	    mm.set(‘name’,’Gao’); //“Gao”
-	    ```	
+	    	
 	* 如果读取一个不存在的键会返回undefined： new Map().get(‘unknown’); //undefined	
 	* 同一键连续赋值将覆盖前者： let map = new Map();map.set(1,'aa').set(1,'bb');map.get(1); //“bb”
 	* Map()继承的属性：
-	    `Map.prototype.constructor`: 返回一个函数，它创建了实例的原型。
-	    `Map.prototype.size`: 返回键值对的数量。
+	    Map.prototype.constructor: 返回一个函数，它创建了实例的原型。
+	    Map.prototype.size: 返回键值对的数量。
 	* Map()继承的方法：
-	    `Map.prototype.clear()`	
+	    Map.prototype.clear()	
 ### 基本类型的值是无法被改变的，只能被重新赋值：
 	* var str = “abc”;
 	* str[0] = 1;
@@ -198,11 +198,11 @@
 	* 操作方法：
 		
 	* 迭代方法：
-	    `.every()`
-	    `.filter()`
-	    `.forEach()`
-	    `.map()`
-	    `.some()`
+	    .every()
+	    .filter()
+	    .forEach()
+	    .map()
+	    .some()
 ### someFunction()()():
 	* someFunction中需要return另一个function2中return另一个function3。
 	* 这个就意味着直接执行了“孙函数”。
@@ -220,7 +220,7 @@
 	    闭包的作用： 可以读取函数内部的变量，让变量始终保存在内存中。
 	    为什么要用闭包： 防止变量污染，但是用多了会内存泄漏。
 	    可以理解成自带运行环境的函数。
-	    ```
+	    
 	    function closeFn() {
 		var count = 0;
 		return function closeFn2() {
@@ -229,10 +229,10 @@
 	    }
 	    var test1 = closeFn(); var test2 = closeFn();
 	    test1();test1();test2(); //010
-	    ```
+	    
 	    arguments.callee:
 		callee有效的实现了递归函数，防止了函数名错误问题。
-		````
+		
 		function func(num) {
 		    if(num<=1){
 			return 1;
@@ -242,7 +242,7 @@
 		}
 		var test = func(4);
 		alert(test); //24
-		```
+		
 
 
 ### typeof和instanceof的区别：
