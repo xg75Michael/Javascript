@@ -79,7 +79,8 @@
 	var err = new Error(‘Wrong’); // err.message = ‘Wrong’;
 	if(err.name) {
 		throw err.message; // ‘Wrong’
-	}```<br>
+	}
+	```<br>
 	原生几种错误对象：<br>
 		```
 		var err1 = new Error('wrong');
@@ -136,7 +137,7 @@
 		函数声明不需要分号，但是函数表达式需要;<br>
 	`switch…case` 建议用对象结构代替;<br>
 - console 对象与控制台：<br>
-	`console.log()`和`console.info()用法效果基本相同；<br>
+	`console.log()`和`console.info()`用法效果基本相同；<br>
 		console.log 支持以下占位符：<br>
 			`%s`字符串<br>
 			`%d`整数<br>
