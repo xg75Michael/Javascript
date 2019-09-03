@@ -75,12 +75,18 @@
 		`undefined`, `null`, `0(-0,+0)`, `NaN`, `’’`<br>
 	only `+` could transfer to strings;<br>
 - 错误处理机制：<br>
-```
+	```
+	这里是高亮区域行1  
+	testing
+	使用的是三个反引号
+	这里是高亮区域行3
+	```
+	```
 	var err = new Error(‘Wrong’); // err.message = ‘Wrong’;
 	if(err.name) {
 		throw err.message; // ‘Wrong’
 	}
-```<br>
+	```<br>
 	原生几种错误对象：<br>
 		```
 		var err1 = new Error('wrong');
