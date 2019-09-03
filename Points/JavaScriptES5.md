@@ -98,6 +98,7 @@
 		err6.message; // “URI wrong”
 		err7.message; // “no longer use this one”
 		```
+		
 	自定义错误：
 		```
 		function MyError(message) {
@@ -129,6 +130,7 @@
 			var result = f(); // 0 1 3
 			result; // false
 		```
+
 - 编程风格：<br>
 	圆括号(parentheses)在函数调用和函数定义时，函数名和左括号之间没有空格，其他都有。<br>
 	分号：<br>
