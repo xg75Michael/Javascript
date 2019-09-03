@@ -83,53 +83,53 @@
 	```
 	原生几种错误对象：<br>
 		```
-		var err1 = new Error('wrong');
-		var err2 = new RangeError('range wrong');
-		var err3 = new TypeError('type wrong');
-		var err4 = new SyntaxError('syntax wrong');
-		var err5 = new ReferenceError('reference wrong');
-		var err6 = new URIError('URI wrong');
-		var err7 = new EvalError('no longer use this one');
-		err1.message; // “wrong”
-		err2.message; // “range wrong”
-		err3.message; // “type wrong”
-		err4.message; // “syntax wrong”
-		err5.message; // “reference wrong”
-		err6.message; // “URI wrong”
-		err7.message; // “no longer use this one”
-		```
+		var err1 = new Error('wrong’);<br>
+		var err2 = new RangeError('range wrong');<br>
+		var err3 = new TypeError('type wrong');<br>
+		var err4 = new SyntaxError('syntax wrong');<br>
+		var err5 = new ReferenceError('reference wrong');<br>
+		var err6 = new URIError('URI wrong');<br>
+		var err7 = new EvalError('no longer use this one');<br>
+		err1.message; // “wrong”<br>
+		err2.message; // “range wrong”<br>
+		err3.message; // “type wrong”<br>
+		err4.message; // “syntax wrong”<br>
+		err5.message; // “reference wrong”<br>
+		err6.message; // “URI wrong”<br>
+		err7.message; // “no longer use this one”<br>
+		```<br>
 		
-	自定义错误：
+	自定义错误：<br>
 		```
-		function MyError(message) {
-			this.message = message || ‘default message’;
-			this.name = ‘MyError’;
-		}
-		MyError.prototype = new Error();
-		MyError.prototype.constructor = MyError;
+		function MyError(message) {<br>
+			this.message = message || ‘default message’;<br>
+			this.name = ‘MyError’;<br>
+		}<br>
+		MyError.prototype = new Error();<br>
+		MyError.prototype.constructor = MyError;<br>
+		```<br>
+	`throw` 的作用是手动中断程序， 它可以抛出任何值;<br>
+	`try...catch` 的作用是捕捉错误并对错误处理，程序不会中断;<br>
+	`finally` 的作用是无论是否有错误最后都会执行的代码;<br>
 		```
-	`throw` 的作用是手动中断程序， 它可以抛出任何值;
-	`try...catch` 的作用是捕捉错误并对错误处理，程序不会中断;
-	`finally` 的作用是无论是否有错误最后都会执行的代码;
-		```
-		function f() {
-  			try {
-    				console.log(0);
-    				throw 'bug'; // 进入catch
-  			} catch(e) {
-    				console.log(1);
-    				return true; // 这句原本会延迟到 finally 代码块结束再执行
-    				console.log(2); // 不会运行
-  			} finally {
-    				console.log(3);
-    				return false; // 这句会覆盖掉前面那句 return
-    				console.log(4); // 不会运行
-  			}
-	  		console.log(5); // 不会运行
-		}
-			var result = f(); // 0 1 3
-			result; // false
-		```
+		function f() {<br>
+  			try {<br>
+    				console.log(0);<br>
+    				throw 'bug'; // 进入catch<br>
+  			} catch(e) {<br>
+    				console.log(1);<br>
+    				return true; // 这句原本会延迟到 finally 代码块结束再执行<br>
+    				console.log(2); // 不会运行<br>
+  			} finally {<br>
+    				console.log(3);<br>
+    				return false; // 这句会覆盖掉前面那句 return<br>
+    				console.log(4); // 不会运行<br>
+  			}<br>
+	  		console.log(5); // 不会运行<br>
+		}<br>
+			var result = f(); // 0 1 3<br>
+			result; // false<br>
+		```<br>
 
 - 编程风格：<br>
 	圆括号(parentheses)在函数调用和函数定义时，函数名和左括号之间没有空格，其他都有。<br>
