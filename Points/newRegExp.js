@@ -73,11 +73,11 @@ console.log(patternCompile.test("This will return false!"));
 var text = "mom and dad and baby";
 var pattern = /mom( and dad( and baby)?)?/gi;
 var matches = pattern.exec(text);
-console.log(matches.index);
-console.log(matches.input);
-console.log(matches[0]);
-console.log(matches[1]);
-console.log(matches[2]);
+console.log(matches.index); // 0
+console.log(matches.input); // mom and dad and baby
+console.log(matches[0]); // mom and dad and baby
+console.log(matches[1]); // and dad and baby
+console.log(matches[2]); // and baby
 
 // to LocaleString(), toString()
 var patternString = new RegExp("\\[bc\\]at", "gi");
@@ -111,25 +111,6 @@ if (patternAttrs.test(textAttrs)) {
 	console.log(RegExp.$2);				// t
 	console.log(RegExp.$9);				// null, returns 9th
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
