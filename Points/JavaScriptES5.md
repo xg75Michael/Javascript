@@ -445,7 +445,24 @@
 		`date.get***()` 有很多`get`的方法得到`date`的值；<br>
 		`date.set***()` 也有很多`set`的方法设置`date`对象的值；<br>
 - RegExp对象：<br>
-	规则太多，先跳过；<br>
+	正则表达式修饰符：<br>
+		`\i`不区分大小写；<br>
+		`\g`全部匹配直到最后；<br>
+		`\m`多行匹配；<br>
+	正则表达式常用规则：<br>
+		`\d`所有的数字，和`[0-9]`等价； `\D`所有非数字，和`[^0-9]`等价；<br>
+		`\s`所有空白字符，包括空格，换行，tab等； `\S`所有非空白字符；<br>
+		`\w`所有字母数字，等价于`[A-Za-z0-9]`; `\W`所有非字母数字；<br>
+		`^`表示开头； `[^xyz]`匹配除了xyz的其他一切；<br>
+		`{n}`表示重复n次；`{n,}`至少重复n次；`{n,m}`重复n到m次；<br>
+		`(x)`小括号是捕捉组，从1开始计算，可以用`$1`和`$2`来获取；<br>
+			`’bar foo’.replace()`
+	以下方法可以和正则表达式使用：<br>
+	`exec`,`test`,`match`,`matchAll`,`search`,`replace`,`split`;<br>
+	`someRegex.test(someString)` 返回 `true` or `false`如果`someString`符合`someRegex`;<br>
+	`someStr.match(someRegex)` 返回数组，包含所有`match`的选项，或者返回`null`如果没有找到；<br>
+	`someStr.search(someRegex)` 返回找到的开始位置，返回`-1`如果没找到；<br>
+	`someStr.replace(someRegex, otherStr)` 返回替换后的字符串；<br>
 - JSON对象：<br>
 	JavaScript Object Notation，书写简单一目了然；<br>
 	只有数组和对象可以复合，必须使用双引号，键名必须放在双引号里，最后没有逗号；<br>
