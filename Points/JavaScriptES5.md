@@ -446,23 +446,59 @@
 		`date.set***()` 也有很多`set`的方法设置`date`对象的值；<br>
 - RegExp对象：<br>
 	正则表达式修饰符：<br>
-		`\i`不区分大小写；<br>
-		`\g`全部匹配直到最后；<br>
-		`\m`多行匹配；<br>
-	正则表达式常用规则：<br>
-		`\d`所有的数字，和`[0-9]`等价； `\D`所有非数字，和`[^0-9]`等价；<br>
-		`\s`所有空白字符，包括空格，换行，tab等； `\S`所有非空白字符；<br>
-		`\w`所有字母数字，等价于`[A-Za-z0-9]`; `\W`所有非字母数字；<br>
-		`^`表示开头； `[^xyz]`匹配除了xyz的其他一切；<br>
-		`{n}`表示重复n次；`{n,}`至少重复n次；`{n,m}`重复n到m次；<br>
+		`\i`(ignoreCase)不区分大小写；<br>
+		`\g`(global)全部匹配直到最后；<br>
+		`\m`(multiline)多行匹配；<br>
+	正则表达式特殊元字符：<br>
+		`\d`匹配1个数字，和`[0-9]`等价； `\D`匹配1个非数字，和`[^0-9]`等价；<br>
+		`\w`匹配1个字母或数字，等价于`[A-Za-z0-9]`; `\W`匹配1个非字母或数字；<br>
+		`\s`匹配1个空白字符，包括空格，tab等； `\S`匹配1个非空白字符；<br>
+		`\n`匹配1个换行； `\t`匹配1个tab(制表符)；
+		`.`匹配1个任意字符，除了`\n`；<br>		
+		`^`以1个字符开头； `$`以1个字符结尾；<br>
+		`x|y`匹配x或者y； `[xyz]`匹配x或者y或者z；`[^xyz]`匹配除了xyz的1个任意字符；<br>
+		`[a-z]`匹配a-z中任意1个字符； `[^a-z]`匹配除了a-z任意1个字符；<br>
 		`(x)`小括号是捕捉组，从1开始计算，可以用`$1`和`$2`来获取；<br>
-			`’bar foo’.replace()`
+			`'foo bar'.replace(/(\w{3}) (\w{3})/, "$2 $1”); // “bar foo”`<br>
+	代表次数的元字符：<br>
+		`+`表示出现1次或多次；<br>
+		`*`表示出现0次或多次；<br>
+		`?`表示出现0次或1次；<br>
+		`{n}`表示重复n次；`{n,}`至少重复n次；`{n,m}`重复n到m次；<br>
 	以下方法可以和正则表达式使用：<br>
-	`exec`,`test`,`match`,`matchAll`,`search`,`replace`,`split`;<br>
-	`someRegex.test(someString)` 返回 `true` or `false`如果`someString`符合`someRegex`;<br>
-	`someStr.match(someRegex)` 返回数组，包含所有`match`的选项，或者返回`null`如果没有找到；<br>
-	`someStr.search(someRegex)` 返回找到的开始位置，返回`-1`如果没找到；<br>
-	`someStr.replace(someRegex, otherStr)` 返回替换后的字符串；<br>
+		`exec`,`test`,`match`,`matchAll`,`search`,`replace`,`split`;<br>
+		`someRegex.test(someString)` 返回 `true` or `false`如果`someString`符合`someRegex`;<br>
+		`someStr.match(someRegex)` 返回数组，包含所有`match`的选项，或者返回`null`如果没有找到；<br>
+		`someStr.search(someRegex)` 返回找到的开始位置，返回`-1`如果没找到；<br>
+		`someStr.replace(someRegex, otherStr)` 返回替换后的字符串；<br>
+	具体的例子：<br>
+		`/^\d+$/` // 只能是1个或者多个数字<br>
+		`/^[10-23]$/` // 中括号里是1或0-2或3的意思 注意！<br>
+		`/[123-]/` // 如果想要在中括号中加-字符，放在最后即可<br>
+		`/^1|2$/` // 可以匹配 1 或 2 或 12，注意和下面的区别<br>
+		`/^[12]$/` // 只匹配 1 或 2，注意和上面的区别<br>
+		`/^10|28$/` // 并不只匹配10,28,还匹配1028,102,108,128,028<br>
+		`/^(10|28)$/` // 只匹配10或28，使用小括号改变优先级<br>
+		`/^[a-z]([a-z])\1[a-z]$/` // 这个匹配类似’wood’的叠字字符串，使用小括号分组引用<br>
+	常用正则表达式：<br>
+		`/^1\d{10}$/` // 匹配11位数字，用于电话号码；<br>
+		`/^[\u4e00-\u9fa5]{2,4}/` // 匹配4个汉子，用于真实姓名；<br>
+		`/^[\w.-]+@([1-9]|[a-z]|[A-Z])+(\.[A-Za-z]{2,4}){1,2}$/` // 用于邮箱验证；<br>
+		`/^-?(\d|([1-9]\d+))(\.\d+)?$/` // 匹配有效数字；<br>
+		`/^((18|19)|([2-5]\d)|(6[0-5]))$/` // 匹配18-65数字，用于年龄；<br>
+		`/^([12]\d{3})-(0?[1-9]|1[0-2])-([0-2]?\d|3[01])$/` // 匹配时间，年-月-日；<br>
+	简易模版实现原理：
+		```
+		var data = [‘Michael’, ’28’, ‘China’, ‘JavaScript’];
+		var str = “My name is {0}, and I’m {1}, from {2}, learning {3}.”
+		var reg = /\{(\d)\}/g;
+		str = str.replace(reg, function() {
+			return data[arguments[1]]
+		});
+		// “My name is Michael, and I’m 28, from China, learning JavaScript.”
+		```
+		
+
 - JSON对象：<br>
 	JavaScript Object Notation，书写简单一目了然；<br>
 	只有数组和对象可以复合，必须使用双引号，键名必须放在双引号里，最后没有逗号；<br>
