@@ -12,7 +12,7 @@
 - typeof:<br>
 	return `number`, `string`, `boolean`, `function`, `undefined`, `object`<br>
 	`if(someVariable){//...}` will give error is someVariable not defined<br>
-	Recommendation: `if(typeof someVariable === “undefined”){//...}`
+	Recommendation: `if(typeof someVariable === “undefined”){//...}`<br>
 - Boolean:<br> 
 	undefined, null, false, 0, NaN, “”, ‘’ == false;<br>
 	[] == true;<br>
@@ -465,6 +465,15 @@
 		`*`表示出现0次或多次；<br>
 		`?`表示出现0次或1次；次数后面加`?`也是惰性模式`\d{2,5}?\g`，只要找到2个数字就不继续；<br>
 		`{n}`表示重复n次；`{n,}`至少重复n次；`{n,m}`重复n到m次；<br>
+	操作符的优先级：<br>
+		1.转义符`\`；<br>
+		2.括号和方括号`(…), (?=...), (?!...), (?:...), […]`;<br>
+		3.量词限定符`{n,m}, +, *, ?`;<br>
+		4.位置和序列`^, $, \元字符, 一般字符`;<br>
+		5.管道符`|`;<br>
+		注意以下正则表达式：<br>
+			`/^abc|def$/` 和 `/^(abc|def)$/`; <br>
+			`/^[abc]{3}+$/`报错,和 `/^([abc]{3})+$/`; <br>
 	位置的匹配： <br>
 		`^` 匹配开头，多行匹配每行的开头位置；`$`匹配结尾，多行每行的结尾位置；<br>
 			`'hello'.replace(/^|$/g, “#”); // “#hello#”`<br>
@@ -513,7 +522,9 @@
 		`/id=“[^”]*”/` // 匹配id，并在遇到第二个双引号的时候停止，避免一直匹配到最后<br>
 		`/^\s+|\s+$/g` // 模拟`trim`方法去掉开头结尾的空格<br>
 		`str.replace(/(?:^|\s)\w/g, (l)=>l.toUpperCase());` //字符串的每个单词的首字母大写；<br>
-		`/<([^>]+)>[\d\D]*<\/\1>/` // 反向引用，匹配配对的`tag`标签;
+		`/<([^>]+)>[\d\D]*<\/\1>/` // 反向引用，匹配配对的`tag`标签;<br>
+		`/^(\d{15}|\d{17}[\dxX])$/` // 匹配身份证15位或18位；<br>
+		`/^((0{0,2}\d|0?\d{2}|1\d{2}|2[0-4]\d|25[0-5])\.){3}(0{0,2}\d|0?\d{2}|1\d{2}|2[0-4]\d|25[0-5])$/` // IPV4地址<br>
 	常用正则表达式：<br>
 		`/^1\d{10}$/` // 匹配11位数字，用于电话号码；<br>
 		`/^[\u4e00-\u9fa5]{2,4}/` // 匹配4个汉子，用于真实姓名；<br>
