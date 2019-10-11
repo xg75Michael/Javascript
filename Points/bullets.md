@@ -16,7 +16,7 @@
 		    type是发送消息的类型；
 		    source是发送消息的窗口对象；可以用来验证发送网站；
 		    origin是发送消息的窗口的源；可以用来验证发送网站；
-	    Websocket： 简历websocket之后达到双向通信（HTTP只是客户端发送给服务端），建立在TCP协议之上，与HTTP兼容，高效，没有同源限制。
+	    Websocket： 建立websocket之后达到双向通信（HTTP只是客户端发送给服务端），建立在TCP协议之上，与HTTP兼容，高效，没有同源限制。
 	    Node中间代理： 跨域只是限制浏览器，所以使用服务器从中间代理发送和接收请求将没有这个限制。
 	    nginx反向代理： 类似Node中间代理。
 	    window.name + iframe： 实际上使用iframe跨域之后用window.name(2M)来存储信息，然后再改变iframe中src来回归本地从而避开同源限制。
