@@ -122,8 +122,20 @@
 	
 
 
+# HTML
+### HTML5 新增特性：
+	* 增加了用于绘画的canvas元素
+	* 用于媒介回放的video和audio元素
+	* 对本地离线存储的更好的支持
+	* 新的内容元素，比如article、footer、header、nav、section
+	* 新的表单控件，比如calendar、date、time、email、url、search
+
+
 
 # CSS
+### CSS3 新特性：
+	* CSS3相比较CSS2对边框、背景、渐变、文本效果、字体、转换效果、过渡、动画、图片、用户界面、盒模型、媒体查询等都有了很大的进步。
+	* 
 	* 以后添加
 
 
@@ -211,6 +223,14 @@
 	* 函数没有重载，重复声明会覆盖前者。
 	* var func = function func(){}只有在Safari中会导致错误。
 ### 构造函数和函数工厂：
+
+### Date类型：
+	* Date.now() == +new Date(); // true, 两者都返回当前时间的毫秒数
+	* +new Date() == new Date().getTime; // true, 两者都返回当前时间的毫秒数
+### 基本类型的包装类型：
+	* var numobj = new Number(123); // 属于Object， 和 var num = 123; 不同
+		typeof numobj; // object , 它是数字基本类型的包装类型，属于引用类型
+		同理new Boolean(), new String()
 	
 
 
@@ -304,8 +324,13 @@
 	* foo.call(this, arg1,arg2,arg3) == foo.apply(this, args) == this.foo(arg1,arg2,arg3);
 	* .apply()有两个参数，第一个作为函数上下文的对象，第二个是函数参数所组成的数组。
 	* .call()有两个参数，第一个作为函数上下文的对象，第二个是函数参数列表而不是单个数组。
-	* 两个方法都能改变this的指向为函数上下文的对象。
-	* 类似的.bind()方法会返回改变后的函数，低版本浏览器没有bind方法。
+	* 在没有第二个参数的情况下，两个方法效果是一样的。
+	* 两个方法都能改变this的指向为函数上下文的对象，同时与原函数没有耦合关系。
+### .bind()函数：
+	* 此方法会返回一个函数的实例（获得一个新函数），其this会绑定到传给bind()函数的值。
+	* 和.call()和.apply()类似，.bind()可以改变函数的上下文对象。
+	* 相比较bind()中没有第二个参数。
+	* 注意低版本浏览器兼容问题。
 ### document.ready 和 document.load：
 	* 原生JS只有load方法，也就是onload事件，当页面所有资源全部加载完成后执行的函数。
 	* ready是jQuery事件，当DOM节点创建就绪时可以调用，ready不包括CSS和图片资源。
