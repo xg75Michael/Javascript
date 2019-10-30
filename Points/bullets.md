@@ -223,7 +223,23 @@
 	* 函数没有重载，重复声明会覆盖前者。
 	* var func = function func(){}只有在Safari中会导致错误。
 ### 构造函数和函数工厂：
-
+	* 构造函数中的构造两个字，所以需要new来构造一个新的函数，函数中使用this.property来赋值或者增强函数。
+	* 代码没有多少的复用率，每次都是重新创建，共享引用属性。
+		function GouZao(name, age, likes) {
+			this.name = name;
+			this.age = age;
+			this.likes = [‘JS’, ‘HTML’];
+		}
+		var newObeject = new GouZao(‘Michael’, 29);
+		var anotherObject = new GouZao(‘Gao’, 28);
+	* 函数工厂顾名思义它是一个工厂类的函数，在函数中创建一个Object并对其增强，最后返回这个Object。
+		function gongChang(name, age){
+			var obj = new Object();
+			obj.name = name;
+			obj.age = age;
+			return obj;
+		}
+		var newObj = gongChang(‘Michael’, 29);
 ### Date类型：
 	* Date.now() == +new Date(); // true, 两者都返回当前时间的毫秒数
 	* +new Date() == new Date().getTime; // true, 两者都返回当前时间的毫秒数
