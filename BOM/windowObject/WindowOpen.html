@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Window.open()方法</title>
+</head>
+<body>
+	<noscript>
+        This web has to able JavaScript!
+    </noscript>
+
+    <p>window.open()方法可以打开或者导航到一个新的浏览器窗口。</p>
+    <p>总共可以接受4个参数： URL、窗口目标、一个特性字符串和一个布尔值。</p>
+    <p>下面按钮传递了前两个参数，分别是 "https://www.baidu.com" 和 "topFrame"。</p>
+    <button onclick="openBaidu()">打开百度</button>
+
+    <p>以下按钮列举了几个特殊的窗口名称作为第二个参数传递到open中。</p>
+    <p>因为没有iframe框架，所以前三个都是在本窗口打开，只有最后一个是在新窗口打开。</p>
+    <button onclick="selfBaidu()">此窗口打开百度</button>
+    <button onclick="parentBaidu()">父窗口打开百度</button>
+    <button onclick="topBaidu()">最顶层打开百度</button>
+    <button onclick="blankBaidu()">新窗口打开百度</button>
+
+    <p>第三个参数是新的窗口的一些参数字符串。</p>
+    <p>在不打开新窗口的情况下会忽略第三个参数，在有第二个参数没有第三个参数的时候全部设置为默认。</p>
+    <p>下面的按钮会打开一个新页面</p>
+    <button onclick="openMyWindow()">带第三个参数窗口</button>
+    <button onclick="moveMyWindow()">移动我的窗口</button>
+
+    <p>下面按钮会调用 setTimeout 在控制台打印 0-10</p>
+    <button onclick="incrementLog()">每一秒打印一次</button>
+
+
+
+
+
+
+	<script type="text/javascript">
+		function openBaidu() {
+			window.open("https://www.baidu.com", "topFrame");
+			// 表示在 topFrame 框架中打开百度，如果没有则打开一个新窗口并命名为"topFrame"
+			// 新窗口中window.name = "topFrame"
+		}
+		function selfBaidu() {
+			window.open("https://www.baidu.com", "_self");
+		}
+		function parentBaidu() {
+			window.open("https://www.baidu.com", "_parent");
+		}
+		function topBaidu() {
+			window.open("https://www.baidu.com", "_top");
+		}
+		function blankBaidu() {
+			window.open("https://www.baidu.com", "_blank");
+			// window.name = ""; 使用 _blank 方法打开的窗口没有 name 属性
+		}
+		function openMyWindow() {
+			myWindow = window.open("", "myWindow", "height=200,width=400,top=50,left=50,resizable=yes");
+			// window.open 会返回一个对象，通过这个对象可以操作其返回的窗口
+			// 因为 myWindow 前面没有 var 关键字，所以是全局变量，在别的函数中可以查询到
+			myWindow.document.write("<p>This is my window.</p>");
+		}
+		function moveMyWindow() {
+			if (window.myWindow == null) {
+				console.log('You need to open my window first!')
+			} else {
+				myWindow.moveBy(100, 50);
+				// 向下向右移动100px
+				myWindow.resizeBy(100, 50);
+				// width 增加 100px height 增加 50px
+				// 无法超过屏幕边界
+				myWindow.focus();
+				// 聚焦到 myWindow 上
+				// myWindow.close(); // 可以调用 .close() 方法关闭窗口
+				console.log('myWindow.opener 指向原 window 对象： ' + (myWindow.opener == window));
+			}
+		}
+		// 根据 window.open 返回到对象来判断浏览器是否屏蔽了弹出窗口
+		// 建议配合 try catch 语句一起使用
+		var num = 0;
+		var maxNum = 10;
+		function incrementLog() {
+			console.log(num);
+			if (num < maxNum) {
+				setTimeout(incrementLog, 1000);
+				// 这个比较常用，因为可以完全的控制运行时间， setInterval 比较不常用
+				num++;
+			} else {
+				alert("Done!");
+			}
+		}
+	</script>
+</body>
+</html>

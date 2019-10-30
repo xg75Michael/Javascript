@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Get Window Position</title>
+</head>
+<body>
+	<noscript>
+        This web has to able JavaScript!
+    </noscript>
+    <p>显示窗口的位置，考虑到兼容问题，但不要在Opera中使用。</p>
+	<p>左侧距离及顶端距离就是整个浏览器左上角的坐标。</p>
+	<p>距离屏幕左侧距离： <span id="leftPosition">0</span> px</p>
+	<p>距离屏幕顶端距离： <span id="topPosition">0</span> px</p>
+	<button onclick="getPosition()">GetPosition</button>
+
+	<p>因为兼容问题无法确认浏览器窗口的大小，下面取得的是页面视口的大小。</p>
+	<p>页面视口宽度为： <span id="windowWidth">0</span> px</p>
+	<p>页面视口高度为： <span id="windowHeight">0</span> px</p>
+	<button onclick="getSize()">GetSize</button>
+
+
+	<script type="text/javascript">
+		function getPosition() {
+			var leftPos = (typeof window.screenLeft == "number") ?
+					window.screenLeft : window.screenX;
+			var topPos = (typeof window.screenTop == "number") ?
+					window.screenTop : window.screenY;
+			document.getElementById('leftPosition').innerHTML = leftPos;
+			document.getElementById('topPosition').innerHTML = topPos;
+		}
+		// window.moveTo() 和 window.moveBy() 貌似被禁用了。
+
+
+		function getSize() {
+			var pageWidth = window.innerWidth,
+				pageHeigth = window.innerHeight;
+			if (typeof pageWidth != "number") {
+				if (document.compatMode == "CSS1Compat") {
+					pageWidth = document.documentElement.clientWidth;
+					pageHeigth = document.documentElement.clientHeight;
+				} else {
+					pageWidth = document.body.clientWidth;
+					pageHeigth = document.body.clientHeight;
+				}
+			}
+			document.getElementById('windowWidth').innerHTML = pageWidth;
+			document.getElementById('windowHeight').innerHTML = pageHeigth;
+			window.resizeBy(100,100);
+		}
+		// window.resizeTo() 和 window.resizeBy() 貌似也被禁用了
+
+	</script>
+</body>
+</html>
