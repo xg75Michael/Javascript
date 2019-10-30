@@ -354,6 +354,11 @@
 	* <a>tag可以设置target=“_blank”来打开新窗口，但是只会在新标签页中打开。
 	* JS添加onclick事件，window.open(url, title[, “windowFeatures”])可以实现新窗口中打开。
 	* windowFeatures可选属性，可以有menubar，location，status，scrollvars等（注意浏览器支持问题）。
+### frame和iframe的区别：
+	* frame不能脱离frameSet单独使用，也不可以和body同时使用。
+	* frame嵌入的是独立的个体内容，frame是非活动帧，直接把页面切开，可以配合frameSet把页面切成多个。
+	* iframe可以单独使用，可以放在table中，iframe是浮动的框架就是在页面上加上一个页面。
+	* iframe嵌入的是网页的整体，iframe是活动帧，用起来比较灵活，是网页中的子框架，父子关系。
 ### MVC模式:
 	* 最常见的软件框架模式之一，Model(模型),View(视图),Controller(控制)。 V->C->M->V->C->M...的顺序
 	* 实际往往采用更灵活的方式，比如Backbone.js，用户可以直接由View要求Model改变状态。
