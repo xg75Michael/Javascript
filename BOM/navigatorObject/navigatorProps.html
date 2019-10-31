@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>navigator props</title>
+</head>
+<body>
+	<noscript>
+        This web has to able JavaScript!
+    </noscript>
+
+    <p>在此列出常用的大部分 navigator 对象的属性和方法。</p>
+    <p>下面按钮会运行 navigator 的属性和方法并把返回值输入到 HTML 中。</p>
+    <button onclick="getNavigator()">点我点我</button>
+    <p>appCodeName 返回： <span id="navappCodeName"></span></p>
+    <p>appMinorVersion 返回： <span id="navappMinorVersion"></span></p>
+    <p>appName 返回： <span id="navappName"></span></p>
+    <p>appVersion 返回： <span id="navappVersion"></span></p>
+    <p>buildID 返回： <span id="navbuildID"></span></p>
+    <p>cookieEnabled 返回： <span id="navcookieEnabled"></span></p>
+    <p>cpuClass 返回： <span id="navcpuClass"></span></p>
+    <p>方法javaEnabled 返回： <span id="navjavaEnabled"></span></p>
+    <p>language 返回： <span id="navlanguage"></span></p>
+    <p>mimeTypes 返回： <span id="navmimeTypes"></span></p>
+    <p>onLine 返回： <span id="navonLine"></span></p>
+    <p>opsProfile 返回： <span id="navopsProfile"></span></p>
+    <p>oscpu 返回： <span id="navoscpu"></span></p>
+    <p>platform 返回： <span id="navplatform"></span></p>
+    <p>plugins 返回： <span id="navplugins"></span></p>
+    <p>方法preference 返回： <span id="navpreference"></span></p>
+    <p>product 返回： <span id="navproduct"></span></p>
+    <p>productSub 返回： <span id="navproductSub"></span></p>
+    <p>方法register-ContentHandler 返回： <span id="navregister-ContentHandler"></span></p>
+    <p>systemLanguage 返回： <span id="navsystemLanguage"></span></p>
+    <p>userAgent 返回： <span id="navuserAgent"></span></p>
+    <p>userLanguage 返回： <span id="navuserLanguage"></span></p>
+    <p>userProfile 返回： <span id="navuserProfile"></span></p>
+    <p>vendor 返回： <span id="navvendor"></span></p>
+    <p>vendorSub 返回： <span id="navvendorSub"></span></p>
+
+
+
+
+
+
+	<script type="text/javascript">
+		function getNavigator() {
+			document.getElementById("navappCodeName").innerHTML = navigator.appCodeName;
+			document.getElementById("navappMinorVersion").innerHTML = navigator.appMinorVersion;
+			document.getElementById("navappName").innerHTML = navigator.appName;
+			document.getElementById("navappVersion").innerHTML = navigator.appVersion;
+			document.getElementById("navbuildID").innerHTML = navigator.buildID;
+			document.getElementById("navcookieEnabled").innerHTML = navigator.cookieEnabled;
+			document.getElementById("navcpuClass").innerHTML = navigator.cpuClass;
+			document.getElementById("navjavaEnabled").innerHTML = navigator.javaEnabled();
+			document.getElementById("navlanguage").innerHTML = navigator.language;
+			document.getElementById("navmimeTypes").innerHTML = navigator.mimeTypes;
+			document.getElementById("navonLine").innerHTML = navigator.onLine;
+			document.getElementById("navopsProfile").innerHTML = navigator.opsProfile;
+			document.getElementById("navoscpu").innerHTML = navigator.oscpu;
+			document.getElementById("navplatform").innerHTML = navigator.platform;
+			document.getElementById("navplugins").innerHTML = navigator.plugins;
+			// document.getElementById("navpreference").innerHTML = navigator.preference(); // 设置用户的首选项
+			document.getElementById("navproduct").innerHTML = navigator.product;
+			document.getElementById("navproductSub").innerHTML = navigator.productSub;
+			// document.getElementById("navregister-ContentHandler").innerHTML = navigator.register-ContentHandler();
+			document.getElementById("navsystemLanguage").innerHTML = navigator.systemLanguage;
+			document.getElementById("navuserAgent").innerHTML = navigator.userAgent;
+			document.getElementById("navuserLanguage").innerHTML = navigator.userLanguage;
+			document.getElementById("navuserProfile").innerHTML = navigator.userProfile;
+			document.getElementById("navvendor").innerHTML = navigator.vendor;
+			document.getElementById("navvendorSub").innerHTML = navigator.vendorSub;
+
+		}
+	</script>
+
+
+
+
+
+</body>
+</html>
