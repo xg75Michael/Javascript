@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Location 对象</title>
+</head>
+<body>
+	<noscript>
+        This web has to able JavaScript!
+    </noscript>
+
+    <p>location 对象即是 window 的属性，又是 document 的属性。本身保存着很多文档信息。</p>
+    <p>属性名： hash, host, hostname, href, pathname,port, protocol, search</p>
+    <p>下面的按钮可以显示页面的整个 URL 字符串。</p>
+    <button onclick="getURL()">弹出 URL</button>
+    <p>下面按钮可以用 search() 方法把返回一个对象包含着所有查找的字符串，在后台打印出来。</p>
+    <button onclick="getQueryArgs()">search 字符串</button>
+    <p>通过调用 assign() 方法改变 URL 的值来达到跳转的目的。</p>
+    <button onclick="assignFunction()">用assign去百度</button>
+
+
+
+
+
+
+	<script type="text/javascript">
+		function getURL() {
+			alert(window.location.href);
+		}
+		function getQueryArgs() {
+			// 取得查询字符串并去掉开头的 ? 号
+			//var qs = (location.search.length > 0 ? location.search.substring(1) : ""),
+			// 假设 qs 如下
+			var qs = "lan=javascript&time=today&name=michael",
+			// 用于保存数据的对象
+			args = {},
+			// 分隔每一项
+			items = qs.length ? qs.split("&") : [],
+			item = null,
+			name = null,
+			value = null,
+			i = 0,
+			len = items.length;
+			for (i=0; i<len; i++) {
+				item = items[i].split("=");
+				name = decodeURIComponent(item[0]);
+				value = decodeURIComponent(item[1]);
+				if (name.length) {
+					args[name] = value;
+				}
+			}
+			console.log(args);
+			return args;
+		}
+		function assignFunction() {
+			window.location.assign("https://www.baidu.com");
+			// 相当于下面两种方法，他们都会在后台调用 assign ，推荐使用 href
+			// window.location = "https://www.baidu.com";
+			// location.href = "https://www.baidu.com";
+
+			// 以下方法都会以新的 URL 重新加载
+			// location.hash = "...";
+			// location.search = "...";
+			// location.hostname = "...";
+			// location.pathname = "...";
+			// location.port = "...";
+
+			// 只有 .replace() 不会添加历史记录，表示跳转后无法后退操作
+			// location.replace("https://www.baidu.com");
+
+			// reloade() 重新加载页面
+			// location.reload(); // 可能从缓存中加载
+			// location.reload(true); // 一定从服务器重新加载
+		}
+	</script>
+</body>
+</html>
