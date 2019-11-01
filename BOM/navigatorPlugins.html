@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>navigator plugins</title>
+</head>
+<body>
+	<noscript>
+        This web has to able JavaScript!
+    </noscript>
+
+
+    <p>对于非 IE 浏览器可以使用 plugins 来获得插件数组。</p>
+    <p>每一项都包含以下属性： name, description, filename, length</p>
+    <p>点击按钮返回所有已安装插件的名字。</p>
+    <p>能获得插件的名字就可以用 JS 来检测插件是否安装。</p>
+    <button onclick="getPlugins()">列举所有插件的名字</button>
+    <p>插件都有： <span id="pluginsList"></span></p>
+    <p>IE 浏览器中检查插件比较麻烦，因为它不支持 Netscape 插件，只有通过 COM 唯一标识符来确认。</p>
+    <p>如果知道插件的标识符，比如 ShockwaveFlash.ShockwaveFlash 是 Flash 的标识符，则可以检测。</p>
+    <button onclick="hasIEPlugin()">IE 浏览器检测例子</button>
+
+
+	<script type="text/javascript">
+		function getPlugins() {
+			pluginNames = '';
+			allPlugins = window.navigator.plugins;
+			for (var i = 0; i < allPlugins.length; i++) {
+				pluginNames += ( (i+1) + '. ' + allPlugins[i].name + '/ ');
+			}
+			if (pluginNames == document.getElementById("pluginsList").innerHTML) {
+				alert('插件名字已更新！');
+			}
+			document.getElementById("pluginsList").innerHTML = pluginNames;
+		}
+		function hasIEPlugin(name) {
+			try {
+				// new ActiveXObject(name); // 动态监测时直接带入 name 参数
+				new ActiveXObject("ShockwaveFlash.ShockwaveFlash");
+				alert('True');
+			} catch (ex) {
+				alert('False: ' + ex);
+			}
+		}
+	</script>
+
+
+
+
+
+</body>
+</html>

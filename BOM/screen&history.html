@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Screen and History</title>
+</head>
+<body>
+	<noscript>
+        This web has to able JavaScript!
+    </noscript>
+
+    <p>screen 对象基本上只是用来表达客户端的能力，对于编程用处不大。</p>
+    <p>下面按钮可以遍历 screen 对象返回可遍历的属性名。</p>
+    <button onclick="getScreenProps()">得到可遍历属性名</button>
+    <p>具体属性有： <span id="screenProps"></span></p>
+    <p>history 对象保存着用户上网的记录</p>
+    <p>每个窗口都有自己的 history 的列表，正常开发人员是无法得知用户浏览记录的，但是通过列表可以实现进退。</p>
+    <p>history.go(number); history.back(); history.forward(); 可以简单进退，可以检测是否是第一个页面。</p>
+    <p>同时它还有个 length 属性，返回列表的数量，包括向前和向后的数量。</p>
+    <p>history 的长度是： <span id="historyLength"></span></p>
+    <button onclick="getHistoryLength()">返回历史长度</button>
+
+
+
+
+
+	<script type="text/javascript">
+		function getScreenProps() {
+			var propsList = '';
+			for(var key in window.screen) {
+				propsList += (key + ', ');
+			}
+			document.getElementById('screenProps').innerHTML = propsList;
+		}
+		function getHistoryLength() {
+			document.getElementById('historyLength').innerHTML = window.history.length;
+		}
+	</script>
+
+
+
+
+
+</body>
+</html>
