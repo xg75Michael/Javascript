@@ -1,0 +1,20 @@
+#box {
+	color: blue;
+	width: 300px;
+	height: 300px;
+	/*border: 10px solid black;*/
+	/*padding: 10px;*/
+	overflow: scroll;
+	/*滚动条只有在内容超过实际高度的时候才会出现*/
+	margin: 20px;
+	/*position: absolute;*/
+	/*top: 50px;*/
+	/*left: 50px;*/
+}
+#pox {
+	width: 500px;
+	height: 500px;
+	position: absolute;
+	top: 50px;
+	left: 50px;
+}
