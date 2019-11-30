@@ -31,3 +31,12 @@ function getTarget(evt) {
 		return window.event.srcElement;
 	}
 }
+// 跨浏览器获取字符编码
+function getCharCode(evt) {
+	var e = evt || window.event;
+	if (typeof e.charCode == 'number') {
+		return e.charCode;
+	} else {
+		return e.keyCode;
+	}
+}
