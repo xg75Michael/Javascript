@@ -3,15 +3,29 @@
 <head>
 	<title>pop capture</title>
 </head>
+<style>
+	* {
+		font-size: 20px;
+		text-align: center;
+		margin: 0 auto;
+		box-sizing: border-box;
+	}
+	body {
+		height: 100vh;
+		width: 100vw;
+		padding-top: 40px;
+	}
+</style>
 <body>
-	<div class="div1">
+	<div class="div1" style="background-color: #aaa; width: 700px; height: 250px;">
 		div1
-		<div class="div2">
+		<div class="div2" style="background-color: #55d; width: 600px; height: 200px;">
 			div2
-			<div class="div3">
+			<div class="div3" style="background-color: #5d5; width: 500px; height: 150px;">
 				div3
-				<div class="div4">
+				<div class="div4" style="background-color: #d55; width: 400px; height: 100px;">
 					div4
+					<input type="text" name="text" value="text" class="inputText">
 				</div>
 			</div>
 		</div>
@@ -21,31 +35,45 @@
 
 <script type="text/javascript">
 	window.onload = function() {
-		document.querySelector('.div1').addEventListener('click', function() {
-			console.log('1');
+		// 设置 true 则为捕获机制
+		// document.querySelector('.div1').addEventListener('click', function() {
+		// 	console.log('clicked div1');
+		// }, true);
+		// document.querySelector('.div2').addEventListener('click', function() {
+		// 	console.log('clicked div2');
+		// }, true);
+		// document.querySelector('.div3').addEventListener('click', function() {
+		// 	console.log('clicked div3');
+		// }, true);
+		// document.querySelector('.div4').addEventListener('click', function() {
+		// 	console.log('clicked div4');
+		// }, true);
+		// 不推荐，因为旧版本浏览器不支持事件捕获
+
+
+		// 这是默认冒泡机制
+		document.querySelector('.div1').addEventListener('click', function(evt) {
+			console.log('clicked div1');
 		});
-		document.querySelector('.div2').addEventListener('click', function() {
-			console.log('2');
+		document.querySelector('.div2').addEventListener('click', function(evt) {
+			console.log('clicked div2');
 		});
-		document.querySelector('.div3').addEventListener('click', function() {
-			console.log('3');
+		document.querySelector('.div3').addEventListener('click', function(evt) {
+			console.log('clicked div3');
 		});
-		document.querySelector('.div4').addEventListener('click', function() {
-			console.log('4');
+		document.querySelector('.div4').addEventListener('click', function(evt) {
+			console.log('clicked div4');
 		});
 
-		document.querySelector('.div1').addEventListener('click', function() {
-			console.log('1');
-		}, true);
-		document.querySelector('.div2').addEventListener('click', function() {
-			console.log('2');
-		}, true);
-		document.querySelector('.div3').addEventListener('click', function() {
-			console.log('3');
-		}, true);
-		document.querySelector('.div4').addEventListener('click', function() {
-			console.log('4');
-		}, true);
+		// 在 body 上绑定 click 事件并打印出实际点击的元素内容
+		document.body.addEventListener('click', function(evt) {
+			var e = evt || window.event; // 兼容 IE
+			console.log(e.type + ' : ' + e.target.nodeName + ', class is: ' + e.target.className);
+			if (e.target.nodeName.toUpperCase() == 'INPUT') {
+				// 当目标是 input 的时候打印 input 的 value 值
+				console.log('This is input and its value is: ' + e.target.value);
+			}
+		});
 	}
 </script>
 </html>
