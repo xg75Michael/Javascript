@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Rich Edit Page</title>
+    <script type="text/javascript" src="CompatibleEventHandler.js"></script>
+
+</head>
+<body>
+    <noscript>
+        This web has to able JavaScript!
+    </noscript>
+
+    <p>This iframe can be edited.</p>
+    <iframe src="richEditeBlank.html" name="richEdit" style="height: 200px;width: 400px;"></iframe>
+    <!-- 像是 textarea 一样，添加的是 p 元素 -->
+
+    <div class="editable" id="richDiv" contenteditable="true" style="width: 400px; height: 200px; background-color: #ddd;"></div>
+    <!-- 添加的是 div 元素 -->
+    <button id="richDivButton">Toggle div editable</button>
+
+    <script>
+    	EventUtil.addHandler(window, 'load', function() {
+            frames['richEdit'].document.designMode = 'on';
+            frames['richEdit'].document.execCommand('italic', false, null);
+            // 这 execCommand 没用啊，没效果
+
+            // myDivRich toggle contentEditable
+            var myDivButton = document.getElementById('richDivButton');
+            var myDivRich = document.getElementById('richDiv');
+            EventUtil.addHandler(myDivButton, 'click', function() {
+                myDivRich.contentEditable === 'true' ? myDivRich.contentEditable = 'false' : myDivRich.contentEditable = 'true';
+                console.log(myDivRich.contentEditable);
+                document.execCommand('bold', false, null);
+                // 这 execCommand 没用啊，没效果
+            });
+        });
+    </script>
+
+</body>
+</html>

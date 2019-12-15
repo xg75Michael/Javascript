@@ -4,6 +4,8 @@
     <meta charset="utf-8">
     <title>动态获得 input 中的 value</title>
     <script type="text/javascript" src="basic.js"></script>
+    <script type="text/javascript" src="CompatibleEventHandler.js"></script>
+
 </head>
 <body>
     <noscript>
@@ -12,19 +14,81 @@
 
     <p>Test for form's change event.</p>
     <form id="myform">
-   		Input: <input type="input" name="myinput" value="hi">
+   		Input: <input type="text" name="myinput" value="change this input" size="15" maxlength="10"><br>
+        Select: <select name="myselect">
+            <option value="Select A">Select A</option>
+            <option value="Select B">Select B</option>
+            <option value="Select C">Select C</option>
+        </select><br>
+        <textarea cols="30" rows="3" maxlength="20">Initial value need be put into element,this maxlength = 20</textarea>
     </form>
-    <p>Blow will be changed if the input changed and blur.</p>
-    <p>Input text: <span id="inputValue">null</span></p>
+    <p>Input and textarea will fire change event if the input changed and blur.</p>
+    <p>Input text: <strong><span id="inputValue">...</span></strong></p>
+    <p>Select will fire change event if selected other selection, does not need to blur.</p>
+    <p>Select option: <strong><span id="selectValue">...</span></strong></p>
+    <form>
+        <input type="number" name="" max="100" min="0" step="5">
+        <input type="url" name="">
+        <select id="myselection" name="myselection">
+            <option value="123">1111</option>
+            <option value="456">4444</option>
+            <option value="789">7777</option>
+            <option value="789">7777</option>
+            <option value="789">7777</option>
+            <option value="789">7777</option>
+        </select>
+        <input type="checkbox" name="">checkbox1
+        <input type="checkbox" name="">checkbox2
+        <input type="checkbox" name="">checkbox3
+        <input type="radio" name="radio">radio1
+        <input type="radio" name="radio">radio2
+    </form>
 
     <script>
     	addEvent(window, 'load', function() {
 			var myinput = document.getElementById('myform')['myinput'];
-			var myspan = document.getElementById('inputValue');
-			console.log(myinput);
+            var myselect = document.getElementById('myform')['myselect'];
+			var myinputspan = document.getElementById('inputValue');
+            var myselectspan = document.getElementById('selectValue');
+			// console.log(myselect.value);
 			addEvent(myinput, 'change', function() {
-				myspan.innerHTML = myinput.value;
-			})
+                var target = EventUtil.getTarget(event);
+                console.log('Input has been changed to : ' + myinput.value);
+                target.style.backgroundColor = ''; // 取消背景颜色
+				myinputspan.innerHTML = myinput.value;
+
+			});
+            // 当用户点击准备输入的时候可以做一定操作，如果更改背景颜色
+            addEvent(myinput, 'focus', function(event) {
+                var event = EventUtil.getEvent(event);
+                var target = EventUtil.getTarget(event);
+                // console.log(target);
+                // 如果背景颜色不是红色（比如正则验证错误输入），则改为黄色
+                if (target.style.backgroundColor != 'red') {
+                    target.style.backgroundColor = 'yellow';
+                }
+                // 选中全部的文本， Safari 中无效
+                target.select();
+            });
+            // 当用户选择文本的时候
+            addEvent(myinput, 'select', function(event) {
+                var target = EventUtil.getTarget(event);
+                // 有 selectionStart 和 selectionEnd 属性表示起始点和结束点
+                console.log('Text selected: ' + 
+                    target.value.substring(target.selectionStart, target.selectionEnd));
+            });
+            // 取消背景颜色
+            addEvent(myinput, 'blur', function(event) {
+                var event = EventUtil.getEvent(event);
+                var target = EventUtil.getTarget(event);
+                if (target.style.backgroundColor != 'red') {
+                    target.style.backgroundColor = '';
+                }
+            });
+            addEvent(myselect, 'change', function() {
+                console.log('Select has been changed to : ' + myselect.value);
+                myselectspan.innerHTML = myselect.value;
+            });
 		});
     </script>
 
