@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Canvas</title>
+</head>
+<body>
+    <noscript>
+        This web has to able JavaScript!
+    </noscript>
+
+    <p>Canvas</p>
+    <p>lineJoin: 线接头处的形状</p>
+    <p>arc(x,y,radius,startAngle,endAngle,counterclockwise): 绘制圆弧</p>
+    <p>lineTo(x,y): 绘制直线</p>
+    <p>moveTo(x,y): 将笔移动到 x,y 处</p>
+    <p>textAlign: 文本对齐方式</p>
+    <p>measureText(str): 返回字符 str 所占用的 width</p>
+
+    <canvas id="mycanvas" width="800" height="300">If does not support, this message will show up.</canvas>
+    <canvas id="mycanvas2" width="200" height="50">If does not support, this message will show up.</canvas>
+
+    <script>
+    	window.onload = function() {
+			var myCanvas = document.getElementById('mycanvas');
+			var myCanvas2 = document.getElementById('mycanvas2');
+			// 检测 .getContext 方法是否存在
+	    	if (myCanvas.getContext) {
+	    		var myContext = mycanvas.getContext('2d');
+	    		console.log(myContext);
+	    		// 定义颜色
+	    		myContext.strokeStyle = 'red';
+	    		myContext.fillStyle = '#0ad';
+	    		// 到这里的时候是没有效果的，因为没开始画，下面是画一个正方形
+	    		// x 坐标， y 坐标，宽度，高度
+	    		myContext.fillRect(100,100,100,100);
+	    		// 定义另一个颜色
+	    		myContext.fillStyle = 'rgba(0, 100, 250, 0.5)';
+	    		// 绘制另一个四边形
+	    		myContext.fillRect(50, 50, 100, 100);
+
+	    		// 绘制四边形的边，也就是 stroke
+	    		// 红色线
+	    		myContext.strokeStyle = '#f00';
+	    		myContext.strokeRect(300, 100, 100, 100);
+	    		// 绿色线
+	    		myContext.strokeStyle = 'rgba(0, 150, 0, 0.9)';
+	    		// 线宽，线的头部，线的接头
+	    		myContext.lineWidth = 20;
+	    		myContext.lineCap = 'round';
+	    		myContext.lineJoin = 'bevel';
+	    		myContext.strokeRect(250, 50, 100, 100);
+
+	    		// 清除 canvas 上的区域
+	    		// 把 fillRect 重叠部分抹掉
+	    		myContext.clearRect(100, 100, 50, 50);
+
+	    		// 绘制时钟
+	    		myContext.strokeStyle = '#000';
+	    		myContext.lineWidth = 1;
+	    		myContext.beginPath();
+	    		myContext.arc(600, 100, 99, 0, 2*Math.PI, false);
+	    		myContext.moveTo(694, 100);
+	    		myContext.arc(600, 100, 94, 0, 2*Math.PI, false);
+	    		myContext.moveTo(600, 100);
+	    		myContext.lineTo(600, 15);
+	    		myContext.moveTo(600, 100);
+	    		myContext.lineTo(535, 100);
+	    		myContext.stroke();
+	    		// 可以使用 isPointInPath() 方法来判断某一点是否在路径上
+	    		if (myContext.isPointInPath(600, 100)) {
+	    			console.log('(600, 100) is in the path.');
+	    		}
+	    		// 使用 fillText() 和 strokeText() 方法添加文字
+	    		// 使用 fillText() 的话需要用 fillStyle 属性
+	    		myContext.fillStyle = '#000';
+	    		myContext.font = 'bold 14px Arial';
+	    		myContext.textAlign = 'center';
+	    		myContext.textBaseline = 'middle';
+	    		myContext.fillText('12', 600, 20, 10); // 第四个参数为最大像素的宽度
+	    		// 测试 textAlign 的属性
+	    		myContext.textAlign = 'start';
+	    		myContext.fillText('12', 600, 40);
+	    		myContext.textAlign = 'end';
+	    		myContext.fillText('12', 600, 60);
+	    		// 测试 textBaseline 属性
+	    		myContext.textBaseline = 'top';
+	    		myContext.fillText('AA', 550, 100);
+	    		myContext.textBaseline = 'bottom';
+	    		myContext.fillText('AA', 570, 100);
+	    		myContext.textBaseline = 'hanging';
+	    		myContext.fillText('AA', 590, 100);
+	    		myContext.textBaseline = 'alphabetic';
+	    		myContext.fillText('AA', 610, 100);
+	    		myContext.textBaseline = 'ideographic';
+	    		myContext.fillText('AA', 630, 100);
+
+	    		// 获取另一个 canvas
+	    		// 循环判断宽度 140 的字体大小
+	    		var myContext2 = mycanvas2.getContext('2d');
+	    		console.log(myContext2);
+	    		var fontSize = 100;
+	    		myContext2.font = fontSize + 'px Arial';
+	    		while (myContext2.measureText('Hello world!').width > 140) {
+	    			fontSize--;
+	    			myContext2.font = fontSize + 'px Arial';
+	    		}
+	    		console.log('finally: ' + myContext2.font);
+	    		myContext2.fillStyle = '#17d';
+	    		myContext2.fillText('Hello world!', 0, 20);
+	    		myContext2.fillText('Font size is ' + fontSize + 'px', 0, 40);
+	    	}
+    	};
+    </script>
+
+</body>
+</html>
