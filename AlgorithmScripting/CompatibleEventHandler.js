@@ -91,6 +91,19 @@ var EventUtil = {
 		} else {
 			return event.keyCode;
 		}
+	},
+	// 获得剪贴板的文本
+	getClipboardText: function(event) {
+		var clipboardData = (event.clipboardData) || window.clipboardData;
+		return clipboardData.getData('text');
+	},
+	// 设置剪贴板中的文本
+	setClipboardText: function(event, value) {
+		if (event.clipboardData) {
+			return event.clipboardData.setData('text/plain', value);
+		} else if (window.clipboardData) {
+			return window.clipboardData.setData('text', value);
+		}
 	}
 };
 
