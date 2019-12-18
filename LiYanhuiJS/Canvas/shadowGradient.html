@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Canvas</title>
+</head>
+<body>
+    <noscript>
+        This web has to able JavaScript!
+    </noscript>
+
+    <p>Shadow and Gradient</p>
+    <p>shadowColor: 默认黑色</p>
+    <p>shadowBlur: 默认为0，即不模糊</p>
+    <p>shadowOffsetX shadowOffsetY: 阴影偏移，默认0</p>
+    <p>createLinearGradient(sx,sy,ex,ey): 创建一个渐变对象</p>
+    <p>addColorStop(n, color): 添加颜色点</p>
+    <p>createRadialGradient(x,y,r,x2,y2,r2): 创建放射性渐变</p>
+
+    <canvas id="mycanvas" width="1000" height="300">If does not support, this message will show up.</canvas>
+    <br>
+    <canvas id="mycanvas2" width="1200" height="600">If does not support, this message will show up.</canvas>
+
+    <script>
+    	window.onload = function() {
+			var myCanvas = document.getElementById('mycanvas');
+			var myCanvas2 = document.getElementById('mycanvas2');
+	    	if (myCanvas.getContext) {
+	    		var myContext = myCanvas.getContext('2d');
+	    		myContext.shadowColor = 'rgba(0, 0, 0, 0.3)';
+	    		myContext.shadowOffsetX = 10;
+	    		myContext.shadowOffsetY = 10;
+	    		myContext.shadowBlur = 1;
+
+	    		// 绘制第一个蓝色四边形
+	    		myContext.fillStyle = '#0dd';
+	    		myContext.fillRect(50, 50, 100, 100);
+
+	    		// 绘制一个渐变颜色的四边形
+	    		var myGradient = myContext.createLinearGradient(100, 100, 150, 150);
+	    		myGradient.addColorStop(0, '#d0d');
+	    		myGradient.addColorStop(1, '#dd0');
+	    		myContext.fillStyle = myGradient;
+	    		// 注意创建的渐变坐标需要和四边形坐标相同才能显示所以渐变效果
+	    		myContext.fillRect(100, 100, 100, 100);
+	    		// 所以可以使用函数来封装一下添加渐变的效果
+	    		function createRectLinearGradient(context, x, y, width, height) {
+	    			return context.createLinearGradient(x, y, x+width, y+height);
+	    		}
+	    		var anotherGradient = createRectLinearGradient(myContext, 300, 0, 200, 200);
+	    		anotherGradient.addColorStop(0, '#fff');
+	    		anotherGradient.addColorStop(1, '#000');
+	    		myContext.fillStyle = anotherGradient;
+	    		myContext.fillRect(300, 0, 200, 200); // 注意这几个参数和上面的参数一样
+
+	    		myContext.shadowColor = 'rgba(0, 0, 0, 0)'; // 阴影透明
+	    		console.log(myContext);
+	    		// 放射性渐变
+	    		var radialGradient = myContext.createRadialGradient(750, 150, 30, 750, 150, 100);
+	    		radialGradient.addColorStop(0, '#0af');
+	    		radialGradient.addColorStop(1, '#f70');
+	    		// 先绘制一个正方形
+	    		myContext.fillStyle = '#393';
+	    		myContext.fillRect(600, 0, 200, 200);
+	    		// 再在旁边绘制渐变矩形
+	    		myContext.fillStyle = radialGradient;
+	    		myContext.fillRect(650, 50, 200, 200);
+	    	}
+    	};
+    </script>
+
+</body>
+</html>
