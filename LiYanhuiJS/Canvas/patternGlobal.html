@@ -142,6 +142,16 @@
 	    		// 单色效果就是其他两个设为 0 
 	    		// 反色效果就是 255 - r
 
+	    		// 第一行右边的原图数据
+	    		var myThirdImgData = myContext.getImageData(400, 100, 100, 200);
+	    		var myPosData = myThirdImgData.data;
+	    		for (i = 0; i < 400; i++) {
+	    			// 添加一条白线
+	    			myPosData[i] = 0;
+	    		}
+	    		myThirdImgData.data = myPosData;
+	    		myContext.putImageData(myThirdImgData, 400, 100);
+
 
 	    		// 第二个 canvas
 	    		var myContext2 = myCanvas2.getContext('2d');
