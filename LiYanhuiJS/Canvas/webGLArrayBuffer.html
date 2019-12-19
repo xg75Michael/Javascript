@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>WebGL ArrayBuffer</title>
+</head>
+<body>
+    <noscript>
+        This web has to able JavaScript!
+    </noscript>
+
+    <p>WebGL ArrayBuffer</p>
+    <p>Basic points, view it in the JS code and console.</p>
+    <canvas id="mycanvas" width="1000" height="400">If does not support, this message will show up.</canvas>
+    <br>
+    <canvas id="mycanvas2" width="1200" height="600">If does not support, this message will show up.</canvas>
+
+    <script>
+    	window.onload = function() {
+    		// 创建一个供存储使用的类型化数组
+			var buffer = new ArrayBuffer(20); // 20B 长度的类型化数组
+			var bytes = buffer.byteLength; // 20
+			// console.log(bytes); // 20
+
+			// var view = new DataView(buffer, 9, 10); // 创建一个开始于 9 字节到 18 字节的新视图
+			// view 对象中保存了设置的信息
+			// console.log(view.byteOffset); // 9
+			// console.log(view.byteLength); // 10
+
+			var view = new DataView(buffer);
+			// 手动存储数据
+			view.setUint16(0, 25);
+			view.setUint16(2, 50); // 因为是 16 位，所以 offset 需要是 2 的倍数
+			view.setUint16(4, 60);
+			var value;
+			value = view.getUint16(4);
+			console.log(value); // 60
+
+			// 访问的方法没有限制，0 位置设置了无符号16位的 25 ，它的前8位都是 0 ，所以为0
+			value = view.getInt8(0);
+			console.log(value); // 0
+
+			// 类型化视图，继承 DataView
+			// 创建数组并使用整个缓冲器
+			var buffer2 = new ArrayBuffer(20);
+			// var int8s = new Int8Array(buffer2);
+			// console.log(int8s);
+			// var int16s = new Int16Array(buffer2, 8);
+			// console.log(int16s);
+			// var uint16s = new Uint16Array(buffer2, 4, 4);
+			// console.log(uint16s);
+
+			// 同一个缓冲器中可以保存不同类型的值
+			var int8s2 = new Int8Array(buffer2, 0, 10);
+			console.log(buffer2);
+			console.log(int8s2);
+			var uint16s2 = new Uint16Array(buffer2, 10, 5);
+			// 因为是 16 位，所以长度只能是 5 ，不然会超过长度
+			console.log(uint16s2);
+
+			// 每个类型都有一个 BYTES_PER_ELEMENT 属性
+			console.log('Int8Array 占用的空间： ' + Int8Array.BYTES_PER_ELEMENT);
+			console.log('Int16Array 占用的空间： ' + Int16Array.BYTES_PER_ELEMENT);
+			console.log('Int32Array 占用的空间： ' + Int32Array.BYTES_PER_ELEMENT);
+			console.log('Float32Array 占用的空间： ' + Float32Array.BYTES_PER_ELEMENT);
+			// 可以利用这个属性来辅助创建视图
+
+			// 使用类型化视图主要目的是简化对二进制的操作
+			// 可以不用创建 ArrayBuffer ，直接传入数字来创建
+			var int8s3 = new Int8Array(10); // 创建长度为 10 个的 8 位整数
+			console.log(int8s3.length); // 10
+			var int16s3 = new Int16Array(5); // 创建长度为 5 个的 16位整数
+			console.log(int16s3.length); // 5
+			// 也可以把数组直接传入
+			var int8s4 = new Int8Array([1,2,3,4,5]);
+			// 此方法在 WebGL 中最为常用
+			for (var i = 0; i < int8s4.length; i++) {
+				console.log('Value at position ' + i + ' is ' + int8s4[i]);
+			}
+
+			// 最大的 16 位整数是 65535 ，如果保存的是 65537 则保存为 1 ，以此类推
+			var uint16s5 = new Uint16Array(10);
+			uint16s5[0] = 65537;
+			console.log(uint16s5[0]); // 1
+
+			// subarray(s,e) 方法接受两个参数，开始的位置和结束的位置，返回一个部分复制的新视图
+			var uint16s6 = new Uint16Array([0,1,2,3,4,5,6]);
+			var sub16s6 = uint16s6.subarray(2,4);
+			console.log(uint16s6);
+			console.log(sub16s6);
+    	};
+    </script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
