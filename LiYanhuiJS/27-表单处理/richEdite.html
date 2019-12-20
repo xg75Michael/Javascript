@@ -28,11 +28,26 @@
             // myDivRich toggle contentEditable
             var myDivButton = document.getElementById('richDivButton');
             var myDivRich = document.getElementById('richDiv');
+            var myIframe = frames[0];
             EventUtil.addHandler(myDivButton, 'click', function() {
                 myDivRich.contentEditable === 'true' ? myDivRich.contentEditable = 'false' : myDivRich.contentEditable = 'true';
                 console.log(myDivRich.contentEditable);
                 document.execCommand('bold', false, null);
                 // 这 execCommand 没用啊，没效果
+            });
+            EventUtil.addHandler(myIframe, 'mouseup', function() {
+                var myIframeSelection = myIframe.document.getSelection();
+                // .toString() 方法返回选中的字符串
+                var myString = myIframeSelection.toString();
+                // 。getRangeAt() 方法返回选区中的 DOM 的范围，是一个 Range 对象
+                var myrange = myIframeSelection.getRangeAt(0);
+                // 创建一个 span 元素
+                var span = frames['richEdit'].document.createElement('span');
+                // 将 span 元素背景颜色设置为 黄色
+                span.style.backgroundColor = 'yellow';
+                // 将 span 元素包含在选中区域外，使得其呈现黄色背景
+                myrange.surroundContents(span);
+                // PS: 重复选中同一个地方会产生错误，需要改代码进行判断
             });
         });
     </script>
