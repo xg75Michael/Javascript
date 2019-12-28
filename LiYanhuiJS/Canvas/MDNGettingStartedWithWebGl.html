@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Getting started with WebGl</title>
+</head>
+<body>
+    <noscript>
+        This web has to able JavaScript!
+    </noscript>
+
+    <p>Getting started with WebGl</p>
+    <p>Will get deeper when needed.</p>
+    <canvas id="glcanvas" width="640" height="480">If does not support, this message will show up.</canvas>
+    <br>
+    <script>
+    	window.onload = function() {
+            const canvas = document.querySelector('#glcanvas');
+            const gl = canvas.getContext('webgl');
+            if (!gl) {
+                alert('Your Browser Does not Support WebGL');
+                return;
+            }
+            gl.clearColor(0.1, 0.5, 0.9, 1); // 设置清除色
+            gl.clear(gl.COLOR_BUFFER_BIT); // 清除
+
+            // 画一个 2D 的正方形，但是依然在 3D 的空间里
+            // 创建着色器
+            
+    	}
+    </script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
