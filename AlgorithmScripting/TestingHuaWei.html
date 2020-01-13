@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>HuaWei</title>
+</head>
+<body>
+	<p>See console.log</p>
+	<p>遍历数组，遍历对象，push，split，slice，sort</p>
+	<p>JSON.stringify</p>
+</body>
+<script>
+	window.onload = function() {
+		// var theStr = readline();
+		var theStr = 'cccsaAAAkkkdKKaabaaabc';
+		var theArr = theStr.split('');
+		var arrLength = theArr.length; // 6
+		var tempObj = {};
+		for (var i=0; i<arrLength; i++) {
+			if (tempObj[theArr[i]] === undefined) {
+				tempObj[theArr[i]] = 1;
+			} else {
+				tempObj[theArr[i]]++;
+			}
+		}
+		function compareObjectsProp(obj) {
+			let sortArray = [];
+			let newObj = {};
+			for(i in obj) {
+				sortArray.push(obj[i]);
+			}
+			sortArray.sort((a,b) => b-a);
+			// console.log(sortArray);
+			console.log(obj.length)
+			for(var j=0; j<sortArray.length; j++) {
+				for(k in obj) {
+					if (obj[k] === sortArray[j]) {
+						newObj[k] = sortArray[j];
+					}
+				}
+			}
+			return newObj;
+		}
+		var resultObj = compareObjectsProp(tempObj);
+		var JResult = JSON.stringify(resultObj);
+		var resultStr = JResult.slice(1, JResult.length-1).replace(/\"/g, '').replace(/\,/g, ';')+';';
+		console.log(resultStr);
+
+		// print(result);
+	};
+	
+</script>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
