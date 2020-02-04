@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Canvas</title>
+</head>
+<body>
+    <noscript>
+        This web has to able JavaScript!
+    </noscript>
+
+    <p>Canvas</p>
+    <p>translate(x, y): 变换原点位置</p>
+    <p>rotate(angle): 围绕原点旋转</p>
+    <p>save() 和 restore(): 保存和取得上一级的属性状态</p>
+    <p>下面有一个 display 为 none 的图片</p>
+    <img src="image.jpg" style="display: none;">
+    <p>drawImage(img,sx,sy,swidth,sheight,x,y,width,height): 画 img 选择 sx sy 开始 swidth sheight 长宽，在画布上 x y 上开始 width height 的长宽</p>
+    <p>toDataURL(): </p>
+
+    <canvas id="mycanvas" width="800" height="300">If does not support, this message will show up.</canvas>
+    <br>
+    <canvas id="mycanvas2" width="1200" height="600">If does not support, this message will show up.</canvas>
+    <p>下面的图片是动态获取的，使用 todataURL() 来转换的图片</p>
+    <img src="" id="anotherImg">
+    <p>二进制转换的图片</p>
+    <img src="" id="binaryImg">
+
+    <script>
+    	window.onload = function() {
+			var myCanvas = document.getElementById('mycanvas');
+			var myCanvas2 = document.getElementById('mycanvas2');
+	    	if (myCanvas.getContext) {
+	    		var myContext = myCanvas.getContext('2d');
+	    		myContext.strokeStyle = '#000';
+	    		myContext.lineWidth = 1;
+	    		myContext.beginPath();
+	    		myContext.arc(100, 100, 99, 0, 2*Math.PI, false);
+	    		myContext.moveTo(194, 100);
+	    		myContext.arc(100, 100, 94, 0, 2*Math.PI, false);
+	    		// 改变原点的位置，方便后面的绘制
+	    		myContext.translate(100, 100);
+	    		// 旋转‘卡尺画布’，本身 canvas 是没有旋转的
+	    		myContext.rotate(1);
+	    		myContext.moveTo(0, 0);
+	    		myContext.lineTo(0, -85);
+	    		myContext.moveTo(0, 0);
+	    		myContext.lineTo(-65, 0);
+	    		myContext.stroke();
+
+	    		// save and restore
+	    		// 先把 卡尺画布 旋转回来并设置原点
+	    		myContext.rotate(-1);
+	    		myContext.translate(200, 0);
+	    		// 先保存一个状态
+	    		myContext.fillStyle = '#dd0';
+	    		myContext.save();
+	    		// 保存第二个状态
+	    		myContext.fillStyle = '#0dd';
+	    		myContext.save();
+	    		// 用这个颜色画四边形
+	    		myContext.fillStyle = '#d0d';
+	    		myContext.fillRect(0, 0, 100, 100);
+	    		// 返回第二个状态再画
+	    		myContext.restore();
+	    		myContext.fillRect(20, -20, 100, 100);
+	    		// 返回第一个状态再画
+	    		myContext.restore();
+	    		myContext.fillRect(40, -40, 100, 100);
+
+	    		// 获取另一个 canvas
+	    		var myContext2 = myCanvas2.getContext('2d');
+	    		var image = document.images[0];
+	    		myContext2.drawImage(image, 20, 10); // 从画布的 20, 10 开始
+	    		myContext2.drawImage(image, 100, 50, 500, 200); // 从画布的 100, 50 开始画 500 宽 200 长
+	    		myContext2.drawImage(image, 120, 170, 200, 200, 400, 50, 400, 400);
+	    		// 从原图的 120, 170 开始截取 200 宽 200 长，然后在画布上的 400, 50 位置开始画 400 宽 400 长	    	
+	    		// drawImage 需要注意是否是同源
+
+	    		// toDataURL() 方法
+	    		var anotherImg = document.getElementById('anotherImg');
+	    		// image。setAttribute('crossOrigin', 'anonymous'); // 跨域的时候使用
+	    		var myDataURL2 = myCanvas2.toDataURL('image/jpeg', 0.1); // jpeg 低质量
+	    		// data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIA......
+	    		// console.log(myDataURL2);
+	    		anotherImg.src = myDataURL2;
+	    		anotherImg.width = '800';
+    		}
+    		// 将图片转换成 base64 格式
+    		// H5 提供了 FileReader
+    		if (window.FileReader) {
+    			myCanvas.toBlob(function(blob) {
+    				var reader = new FileReader();
+    				reader.onload = function() {
+    					// console.log(reader.result);
+    					// document.getElementById('anotherImg').src = reader.result;
+    					// readAsDataURL 可以直接转换成图片
+    					// 或者二进制数据再进一步处理
+    					// 下面数据转换的不正确------------------
+    					var stringResult = reader.result;
+    					// console.log(stringResult)
+    					var i = stringResult.length;
+    					var binaryString = new Array(i);
+    					while (i--) {
+    						binaryString[i] = String.fromCharCode(stringResult[i]);
+    					}
+    					var dataString = binaryString.join('');
+    					var binaryImage = document.getElementById('binaryImg');
+    					binaryImage.src = 'data:image/png;base64,' + dataString;
+    				}
+    				// reader.readAsDataURL(blob);
+    				reader.readAsBinaryString(blob);
+    				console.log(reader);
+    			});
+    		} else {
+    			alert('Not support FileReader!');
+    		}
+    	};
+    </script>
+
+</body>
+</html>
