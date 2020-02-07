@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>HTML5 脚本编程 XDM</title>
+</head>
+<body>
+    <noscript>
+        This web has to able JavaScript!
+    </noscript>
+
+    <p>HTML5 脚本编程 XDM</p>
+    <p>跨文本消息传递： cross-document messaging, 核心是 postMessage() 方法。</p>
+    <p>postMessage() 接受两个参数，第一个是发送的消息，第二个是表示来自哪个域的字符串来保证安全。</p>
+    <p>如果第二个参数和发送的网页来自一个域则消息会传递，如果不相同则什么也不做；如果是 * 会发送来自任何域的文档，但不推荐。</p>
+
+    <p>当接受到消息的时候会触发 window 的 onmessage 事件</p>
+    <button id="postMessage">Post Message</button>
+    <br>
+    <iframe src="myframe.html" id="myframe"></iframe>
+
+
+    <script>
+        var myPostButton = document.getElementById('postMessage');
+    	myPostButton.onclick = function() {
+    		var iframeWindow = document.getElementById('myframe').contentWindow;
+    		iframeWindow.postMessage('A secret', 'file:///Users/michael/Desktop/GitHub/Javascript/LiYanhuiJS/XDM/XDM.html');
+    		// 向 myframe 发送一个消息，然后在 myframe 的控制台打印出来
+    	};
+    </script>
+
+</body>
+</html>
