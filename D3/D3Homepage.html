@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  	<title>D3 Testing</title>
+    <meta charset="utf-8">
+	<script src="https://d3js.org/d3.v5.min.js"></script>
+</head>
+<body>
+	<p>Selections选择集</p>
+	<p class="testP1">这是个测试文档，主要测试的是D3.js主页上面的一些介绍。</p>
+	<p class="testP1">这里是第二个段落。类名是testP1.</p>
+	<p class="testP1">这里是第三个段落。类名是testP1.</p>
+	<p>--------------------动态属性 分隔符--------------------</p>
+	<p class="testP2">D3中大部分样式和属性都是以函数的形式，不仅仅是常量，所以更加强大</p>
+	<p class="testP2">这里是第三个段落。类名是testP2. 为了测试动态属性。</p>
+	<p class="testP2">这里是第三个段落。类名是testP2. 使用函数随机改变颜色。</p>
+	<p class="testP2">颜色相近的时候可以尝试刷新来直观的看到区别。</p>
+	<p>--------------------enter和exit 分隔符--------------------</p>
+	<p>enter和exit操作时在解决数据绑定的时候与DOM元素个数不匹配的问题。</p>
+	<p>--------------------过渡 分隔符--------------------</p>
+	<div style="height: 100px; width: 100px; border-radius: 50%; background-color: green;"></div>
+
+
+</body>
+
+
+<script>
+	d3.selectAll('.testP1').style('color', 'blue'); // 选择类名，设置前3个段落为蓝色
+	d3.selectAll('.testP2').style('color', function(){
+		// 随机设置 hsl 的值
+		return 'hsl(' + Math.random() * 360 + ',100%,50%)';
+	});
+	// 设置段落字体的大小
+	d3.selectAll('p')
+		.data([14,16,20,26,26,20,16,14]) // 注意此处数据的个数
+		.style('font-size', function(d) {
+			return d + 'px';
+		});
+
+
+	// 因为数据个数14大于p元素的个数，所以使用enter方法来补足个数
+	d3.select("body")
+		.selectAll("p")
+		.data([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15])
+		.enter().append("p")
+		.text(function(d) {
+			return "I’m number " + d + "!";
+		});
+	// // 因为p元素个数多余数据个数6个，所以此段代码会移除上面的所有p元素，对DOM重新更新
+	// var p = d3.select("body")
+	// 	.selectAll("p")
+	// 	.data([4, 8, 15, 16, 23, 42])
+	// 	.text(function(d) {
+	// 		return "I’m number " + d + "!";
+	// 	});
+	// p.exit().remove()  //移除多余的元素
+
+
+	// 过渡动画
+	// 很快的将body的背景色改成黑色
+	// d3.select('body').transition()
+	// 	.style('background-color', 'black');
+	// 可以设置很多不同的延迟线性等
+	d3.selectAll('div').transition()
+		.duration(1750)
+		.delay(1000)
+		.style('background-color', 'red');
+
+
+</script>
+  
+</script>
+</html>
