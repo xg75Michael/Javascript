@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+
+</style>
+
+<body>
+    Function removeDuplicate
+</body>
+
+<script>
+    function removeDuplicate(str) {
+        let strLength = str.length;
+        let arr = str.split('');
+        let temparr = [];
+        arr.map(function(item, index) {
+            for (let tempLength = 1; tempLength < str.length - 1; tempLength++) {
+                if (str.slice(index + tempLength).indexOf(str.slice(index, index + tempLength)) > 0) {
+                    temparr.push(str.slice(index - 1, index + tempLength));
+                }
+            }
+        });
+        let repeatStr = temparr.reduce(function(pre, next) {
+            return pre.length > next.length ? pre : next
+        });
+        // let resultStr = str.slice(0, str.indexOf(repeatStr)) + str.slice(str.indexOf(repeatStr) + repeatStr.length);
+        // let resultStr = str.replace(repeatStr, '');
+        arr.splice(str.indexOf(repeatStr), repeatStr.length, '');
+        let resultStr = arr.join('');
+        console.log(resultStr);
+    }
+    removeDuplicate('5G 澎⁠湃⁠内⁠芯 低功耗迸发高能量低功耗迸发高能量');
+</script>
+
+</html>
