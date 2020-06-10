@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    li,
+    ul {
+        list-style-type: none;
+    }
+</style>
+
+<body>
+
+</body>
+
+<script>
+    const longestPalindrome = function(s) {
+        const dp = [];
+        for (let i = 0; i < s.length; i += 1) {
+            dp[i] = [];
+        }
+        // console.log(dp);
+        let max = -1;
+        let str = '';
+        for (let l = 0; l < s.length; l += 1) {
+            for (let i = 0; i + l < s.length; i += 1) {
+                const j = i + l;
+                // 分类1： 如果长度只有1，肯定是回文
+                if (l === 0) {
+                    dp[i][j] = true;
+                    // 分类2： 如果长度为2，前后相等则肯定是回文
+                } else if (l <= 2) {
+                    if (s[i] === s[j]) {
+                        dp[i][j] = true;
+                    } else {
+                        dp[i][j] = false;
+                    }
+                    // 分类3： 如果长度为3...
+                } else {
+                    if ((s[i] === s[j]) && dp[i + 1][j - 1]) {
+                        dp[i][j] = true;
+                    } else {
+                        dp[i][j] = false;
+                    }
+                }
+                if (dp[i][j] && l > max) {
+                    max = l;
+                    // console.log(max);
+                    str = s.substring(i, j + 1);
+                }
+                console.log(dp);
+
+            }
+        }
+        return str;
+    }
+</script>
+
+</html>
