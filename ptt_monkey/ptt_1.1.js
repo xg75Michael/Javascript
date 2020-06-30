@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            PTT Tasks Assistant
 // @namespace       ptt-task-assistant-for-huawei.user.js
-// @version         1.0
+// @version         1.1
 // @description     try to take over the world!
 // @author          Michael Gao
 // @include         https://live.pttgps.com/track/*
@@ -14,6 +14,78 @@ window.onload = function() {
         e.onmouseover = () => e.style.color = '#E87E04';
         e.onmouseout = () => e.style.color = '#000';
     }
+    //// GET USER ID
+    let user_ID_Num;
+    let user_ID_Req = new XMLHttpRequest();
+    user_ID_Req.onreadystatechange = function() {
+        if (user_ID_Req.readyState == 4 && user_ID_Req.status == 200) {
+            user_ID_Num = user_ID_Req.response.split('fdUser=')[1].split('&weeklysummary=')[0].toString();
+            console.log('My User ID: ' + user_ID_Num);
+            //// Assignment Timeestimate
+            let Ele_Time_Estimate = document.getElementById('assignment_timeestimate'),
+                Ele_Search_Input = document.getElementById('q'),
+                Task_ID = document.getElementById('assignment_id').innerText,
+                user_para = '';
+            if (!!Ele_Time_Estimate) {
+                console.log('Assignment Timeestimate');
+                let time_Total = Ele_Time_Estimate.innerText,
+                    WB_Time_Total = (Number(time_Total) * 0.7).toFixed(2),
+                    WB_Time_Record_Hour,
+                    WB_Time_Record_Min;
+                WB_Time_Record_Hour = WB_Time_Total.split('.')[0];
+                WB_Time_Record_Min = Math.floor((Number(WB_Time_Total.split('.')[1]) * 0.6).toString());
+                WB_Time_Record_Min = (() => { return WB_Time_Record_Min >= 10 ? WB_Time_Record_Min : ('0' + WB_Time_Record_Min) })();
+                Ele_Time_Estimate.innerHTML = time_Total + ' * 0.7 = ' + WB_Time_Total + ' = <a href="https://live.pttgps.com/track/rep/user.php?fdUser=' + user_ID_Num + '&weeklysummary=true&submit=true" target="_blank">' + WB_Time_Record_Hour + ':' + WB_Time_Record_Min + '</a><span id="task_copy_or_not" style="color:#f0f;"></span>';
+                Ele_Time_Estimate.onclick = function copy_task_id() {
+                    Ele_Search_Input.value = Task_ID;
+                    Ele_Search_Input.select();
+                    document.execCommand("Copy");
+                    let Task_Copy_Or_Not = document.getElementById('task_copy_or_not')
+                    Task_Copy_Or_Not.innerHTML = ' Task ID Copied!!';
+                };
+
+                //// Quick Time Recording
+                let Ele_Quick_Time_Recording_Lable = Ele_Time_Estimate.previousElementSibling,
+                    Ele_Quick_Time_Recording_Container = document.createElement('span');
+                Ele_Quick_Time_Recording_Container.setAttribute('id', 'Quick_Time_Recording_Container');
+                Ele_Quick_Time_Recording_Container.innerHTML = '<span>Start:</span><select id="quick_time_hour_start" class="record_time_onchange"><option value="00">00</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option><option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09" selected>09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option></select><select id="quick_time_min_start" class="record_time_onchange"><option value="00">00</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option><option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option><option value="32">32</option><option value="33">33</option><option value="34">34</option><option value="35">35</option><option value="36">36</option><option value="37">37</option><option value="38">38</option><option value="39">39</option><option value="40">40</option><option value="41">41</option><option value="42">42</option><option value="43">43</option><option value="44">44</option><option value="45">45</option><option value="46">46</option><option value="47">47</option><option value="48">48</option><option value="49">49</option><option value="50">50</option><option value="51">51</option><option value="52">52</option><option value="53">53</option><option value="54">54</option><option value="55">55</option><option value="56">56</option><option value="57">57</option><option value="58">58</option><option value="59">59</option><select><span>Duration:</span><select id="quick_time_hour_duration" class="record_time_onchange"><option value="00" selected>00</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option><option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option></select><a id="quick_record_button">Quick Record</a>';
+                Ele_Quick_Time_Recording_Lable.appendChild(Ele_Quick_Time_Recording_Container);
+                let Ele_Quick_Record_Button = document.getElementById('quick_record_button'),
+                    Quick_Start_Hour_Value = document.getElementById('quick_time_hour_start').value,
+                    Quick_Start_Min_Value = document.getElementById('quick_time_min_start').value,
+                    Quick_Start_Duration_Value = document.getElementById('quick_time_hour_duration').value,
+                    Quick_Time_Record_Today = new Date(),
+                    Quick_Time_Record_Year = Quick_Time_Record_Today.getFullYear(),
+                    Quick_Time_Record_Month = Quick_Time_Record_Today.getMonth() + 1,
+                    Quick_Time_Record_Day = Quick_Time_Record_Today.getDate(),
+                    Quick_Record_End_Time;
+                Quick_Record_End_Time = Number(Quick_Start_Hour_Value) + Number(Quick_Start_Duration_Value);
+                // 注意: 需要替换 user=4239 参数
+                Ele_Quick_Record_Button.setAttribute('style', 'color: #00f');
+                //  + "&ts='+getts(), 460, 470)"
+                let Quick_Record_Button_Function_Para = "'/track/time/add.php?reload=1&endhour=9:01&hour=9:00&user=" + user_ID_Num + "&date=" + Quick_Time_Record_Year + "-" + Quick_Time_Record_Month + "-" + Quick_Time_Record_Day + "&proj=&task=" + Task_ID.replace(/[^\d]/g, '') + "&ts='+getts(), 460, 470";
+                Ele_Quick_Record_Button.setAttribute('href', "javascript:openwin(" + Quick_Record_Button_Function_Para + ");");
+                // bind each input a onchange event
+                document.querySelectorAll('.record_time_onchange').forEach(function(element) {
+                    element.onchange = function() {
+                        if (element.getAttribute('id') === 'quick_time_hour_start') {
+                            Quick_Start_Hour_Value = this.value;
+                        } else if (element.getAttribute('id') === 'quick_time_min_start') {
+                            Quick_Start_Min_Value = this.value;
+                        } else if (element.getAttribute('id') === 'quick_time_hour_duration') {
+                            Quick_Start_Duration_Value = this.value;
+                        }
+                        Quick_Record_End_Time = Number(Quick_Start_Hour_Value) + Number(Quick_Start_Duration_Value);
+                        Quick_Record_Button_Function_Para = "'/track/time/add.php?reload=1&endhour=" + Quick_Record_End_Time + ":" + Quick_Start_Min_Value + "&hour=" + Quick_Start_Hour_Value + ":" + Quick_Start_Min_Value + "&user=" + user_ID_Num + "&date=" + Quick_Time_Record_Year + "-" + Quick_Time_Record_Month + "-" + Quick_Time_Record_Day + "&proj=&task=" + Task_ID.replace(/[^\d]/g, '') + "&ts='+getts(), 460, 470";
+                        Ele_Quick_Record_Button.setAttribute('href', "javascript:openwin(" + Quick_Record_Button_Function_Para + ");");
+                    }
+                });
+                console.log('Time Recording Para: ' + Quick_Record_Button_Function_Para);
+            }
+        }
+    };
+    user_ID_Req.open('GET', 'https://live.pttgps.com/track/time/');
+    user_ID_Req.send();
 
     //// Quick Unassigned Tasks Direction
     console.log('Quick Unassigned Tasks');
@@ -25,22 +97,23 @@ window.onload = function() {
     let Ele_Rel_Task = document.getElementById('_relatedtask');
     if (!!Ele_Rel_Task) {
         console.log('Quick Open Relative Tasks');
-        let Ele_R_T_P = Ele_Rel_Task.parentElement.parentElement;
-        console.log('Quick Open Relative Tasks222');
-        let Ele_Rel_Tag = document.createElement('a');
-        Ele_Rel_Tag.appendChild(document.createTextNode('Open Relative'));
-        Ele_Rel_Tag.setAttribute('style', 'position: absolute;right: 0;top: -110%;');
-        Ele_R_T_P.appendChild(Ele_Rel_Tag);
-        document.querySelectorAll('#datagrid_childtask a[href]').forEach(item => R_T_Arr.push(item.href));
-        HoverAndOutColor(Ele_Rel_Tag);
-        Ele_Rel_Tag.onclick = () => {
-            if (R_T_Arr.length > 0) {
-                R_T_Arr.map(item => window.open(item));
-            } else {
-                console.log('No Relative Tasks Founded!');
-            }
-        };
-        console.log(R_T_Arr);
+        setTimeout(() => {
+            let Ele_R_T_P = Ele_Rel_Task.parentElement.parentElement;
+            let Ele_Rel_Tag = document.createElement('a');
+            Ele_Rel_Tag.appendChild(document.createTextNode('Open Relative'));
+            Ele_Rel_Tag.setAttribute('style', 'position: absolute;right: 0;top: -110%;');
+            Ele_R_T_P.appendChild(Ele_Rel_Tag);
+            document.querySelectorAll('#tab_relatedtask a[href]').forEach(item => R_T_Arr.push(item.href));
+            HoverAndOutColor(Ele_Rel_Tag);
+            Ele_Rel_Tag.onclick = () => {
+                if (R_T_Arr.length > 0) {
+                    R_T_Arr.map(item => window.open(item));
+                } else {
+                    console.log('No Relative Tasks Founded!');
+                }
+            };
+            console.log('Relative Tasks - ', R_T_Arr);
+        }, 3000);
     }
 
     //// Counting Today's Tasks
@@ -98,7 +171,6 @@ window.onload = function() {
                 }
                 if (Ele_Preview_Window.innerHTML == '') {
                     let myRequest = new XMLHttpRequest();
-                    myRequest = new XMLHttpRequest();
                     myRequest.onreadystatechange = function() {
                         if (myRequest.readyState == 4 && myRequest.status == 200) {
                             my_Request_Response = myRequest.response;
@@ -127,23 +199,25 @@ window.onload = function() {
     //// Quick Download Attachments/
     let Ele_Nav_Attachment_Pre = document.getElementById('_details');
     if (!!Ele_Nav_Attachment_Pre) {
-        console.log('Download Attachments');
-        let Ele_Nav_Attachment = Ele_Nav_Attachment_Pre.parentElement.parentElement;
-        let Ele_Nav_Attachment_A_Tag = document.createElement('a');
-        let A_Tag_Text_Node = document.createTextNode('Download All');
-        let attachments_Links_Arr = [];
-        document.querySelectorAll('#attachmentTable a').forEach(ele => attachments_Links_Arr.push(ele.href));
-        Ele_Nav_Attachment_A_Tag.setAttribute('style', 'position: absolute;right: 0;top: -110%;');
-        HoverAndOutColor(Ele_Nav_Attachment_A_Tag);
-        Ele_Nav_Attachment_A_Tag.appendChild(A_Tag_Text_Node);
-        Ele_Nav_Attachment.appendChild(Ele_Nav_Attachment_A_Tag);
-        Ele_Nav_Attachment_A_Tag.onclick = () => {
-            if (attachments_Links_Arr.length > 0) {
-                attachments_Links_Arr.map(item => window.open(item));
-            } else {
-                console.log('No Attachment Founded!');
-            }
-        };
+        console.log('Quick Download Attachments');
+        setTimeout(() => {
+            let Ele_Nav_Attachment = Ele_Nav_Attachment_Pre.parentElement.parentElement;
+            let Ele_Nav_Attachment_A_Tag = document.createElement('a');
+            let A_Tag_Text_Node = document.createTextNode('Download All');
+            let attachments_Links_Arr = [];
+            document.querySelectorAll('#attachmentTable a').forEach(ele => attachments_Links_Arr.push(ele.href));
+            Ele_Nav_Attachment_A_Tag.setAttribute('style', 'position: absolute;right: 0;top: -110%;');
+            HoverAndOutColor(Ele_Nav_Attachment_A_Tag);
+            Ele_Nav_Attachment_A_Tag.appendChild(A_Tag_Text_Node);
+            Ele_Nav_Attachment.appendChild(Ele_Nav_Attachment_A_Tag);
+            Ele_Nav_Attachment_A_Tag.onclick = () => {
+                if (attachments_Links_Arr.length > 0) {
+                    attachments_Links_Arr.map(item => window.open(item));
+                } else {
+                    console.log('No Attachment Founded!');
+                }
+            };
+        }, 3000);
     }
 
     //// Nav Local Standard
@@ -195,68 +269,7 @@ window.onload = function() {
         Ele_Nav_History.parentElement.appendChild(Ele_Add_Nav_Tool_Li);
     }
 
-    //// Assignment Timeestimate
-    let Ele_Time_Estimate = document.getElementById('assignment_timeestimate'),
-        Ele_Search_Input = document.getElementById('q'),
-        Task_ID = document.getElementById('assignment_id').innerText;
-    if (!!Ele_Time_Estimate) {
-        console.log('Assignment Timeestimate');
-        let time_Total = Ele_Time_Estimate.innerText,
-            WB_Time_Total = (Number(time_Total) * 0.7).toFixed(2),
-            WB_Time_Record_Hour,
-            WB_Time_Record_Min;
-        WB_Time_Record_Hour = WB_Time_Total.split('.')[0];
-        WB_Time_Record_Min = Math.floor((Number(WB_Time_Total.split('.')[1]) * 0.6).toString());
-        WB_Time_Record_Min = (() => { return WB_Time_Record_Min >= 10 ? WB_Time_Record_Min : ('0' + WB_Time_Record_Min) })();
-        Ele_Time_Estimate.innerHTML = time_Total + ' * 0.7 = ' + WB_Time_Total + ' = <a href="https://live.pttgps.com/track/rep/user.php?fdUser=4239&weeklysummary=true&submit=true" target="_blank">' + WB_Time_Record_Hour + ':' + WB_Time_Record_Min + '</a><span id="task_copy_or_not" style="color:#f0f;"></span>';
-        Ele_Time_Estimate.onclick = function copy_task_id() {
-            Ele_Search_Input.value = Task_ID;
-            Ele_Search_Input.select();
-            document.execCommand("Copy");
-            let Task_Copy_Or_Not = document.getElementById('task_copy_or_not')
-            Task_Copy_Or_Not.innerHTML = ' Task ID Copied!!';
-        };
 
-        //// Quick Time Recording
-        // 'https://live.pttgps.com/track/time/add.php?reload=1&endhour=9:00&hour=9:01&user=4239&date=2020-06-18&proj=&task=1503850&ts=1592504539'
-        let Ele_Quick_Time_Recording_Lable = Ele_Time_Estimate.previousElementSibling,
-            Ele_Quick_Time_Recording_Container = document.createElement('span');
-        Ele_Quick_Time_Recording_Container.setAttribute('id', 'Quick_Time_Recording_Container');
-        Ele_Quick_Time_Recording_Container.innerHTML = '<span>Start:</span><select id="quick_time_hour_start" class="record_time_onchange"><option value="00">00</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option><option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09" selected>09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option></select><select id="quick_time_min_start" class="record_time_onchange"><option value="00">00</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option><option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option><option value="32">32</option><option value="33">33</option><option value="34">34</option><option value="35">35</option><option value="36">36</option><option value="37">37</option><option value="38">38</option><option value="39">39</option><option value="40">40</option><option value="41">41</option><option value="42">42</option><option value="43">43</option><option value="44">44</option><option value="45">45</option><option value="46">46</option><option value="47">47</option><option value="48">48</option><option value="49">49</option><option value="50">50</option><option value="51">51</option><option value="52">52</option><option value="53">53</option><option value="54">54</option><option value="55">55</option><option value="56">56</option><option value="57">57</option><option value="58">58</option><option value="59">59</option><select><span>Duration:</span><select id="quick_time_hour_duration" class="record_time_onchange"><option value="00" selected>00</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option><option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option></select><a id="quick_record_button">Quick Record</a>';
-        Ele_Quick_Time_Recording_Lable.appendChild(Ele_Quick_Time_Recording_Container);
-        let Ele_Quick_Record_Button = document.getElementById('quick_record_button'),
-            Quick_Start_Hour_Value = document.getElementById('quick_time_hour_start').value,
-            Quick_Start_Min_Value = document.getElementById('quick_time_min_start').value,
-            Quick_Start_Duration_Value = document.getElementById('quick_time_hour_duration').value,
-            Quick_Time_Record_Today = new Date(),
-            Quick_Time_Record_Year = Quick_Time_Record_Today.getFullYear(),
-            Quick_Time_Record_Month = Quick_Time_Record_Today.getMonth() + 1,
-            Quick_Time_Record_Day = Quick_Time_Record_Today.getDate(),
-            Quick_Record_End_Time;
-        Quick_Record_End_Time = Number(Quick_Start_Hour_Value) + Number(Quick_Start_Duration_Value);
-        // 注意: 需要替换 user=4239 参数
-        Ele_Quick_Record_Button.setAttribute('style', 'color: #00f');
-        //  + "&ts='+getts(), 460, 470)"
-        // href="javascript:openwin('/track/time/add.php?reload=1&endhour=9:00&hour=9:00&user=4239&date=2020-06-19', 460, 470);"
-        let Quick_Record_Button_Function_Para = "'/track/time/add.php?reload=1&endhour=9:01&hour=9:00&user=4239&date=" + Quick_Time_Record_Year + "-" + Quick_Time_Record_Month + "-" + Quick_Time_Record_Day + "&proj=&task=" + Task_ID.replace(/[^\d]/g, '') + "&ts='+getts(), 460, 470";
-        Ele_Quick_Record_Button.setAttribute('href', "javascript:openwin(" + Quick_Record_Button_Function_Para + ");");
-        // bind each input a onchange event
-        document.querySelectorAll('.record_time_onchange').forEach(function(element) {
-            element.onchange = function() {
-                if (element.getAttribute('id') === 'quick_time_hour_start') {
-                    Quick_Start_Hour_Value = this.value;
-                } else if (element.getAttribute('id') === 'quick_time_min_start') {
-                    Quick_Start_Min_Value = this.value;
-                } else if (element.getAttribute('id') === 'quick_time_hour_duration') {
-                    Quick_Start_Duration_Value = this.value;
-                }
-                Quick_Record_End_Time = Number(Quick_Start_Hour_Value) + Number(Quick_Start_Duration_Value);
-                Quick_Record_Button_Function_Para = "'/track/time/add.php?reload=1&endhour=" + Quick_Record_End_Time + ":" + Quick_Start_Min_Value + "&hour=" + Quick_Start_Hour_Value + ":" + Quick_Start_Min_Value + "&user=4239&date=" + Quick_Time_Record_Year + "-" + Quick_Time_Record_Month + "-" + Quick_Time_Record_Day + "&proj=&task=" + Task_ID.replace(/[^\d]/g, '') + "&ts='+getts(), 460, 470";
-                Ele_Quick_Record_Button.setAttribute('href', "javascript:openwin(" + Quick_Record_Button_Function_Para + ");");
-            }
-        });
-        console.log('Time Recording Para: ' + Quick_Record_Button_Function_Para);
-    }
 
     //// Quick Assign To
     // gworkflow_explore_owner has loading delay
@@ -281,9 +294,7 @@ window.onload = function() {
                     });
                     let Last_Comments_Text = document.querySelector('.last_comments .nobold').innerText;
                     let Last_Comments_Text_Name = Last_Comments_Text.slice(1, Last_Comments_Text.length - 1);
-                    console.log('WPL: ' + History_WPL_Name);
-                    console.log('QA Name: ' + History_QA_Name);
-                    console.log('Last Comment Name: ' + Last_Comments_Text_Name);
+                    console.log('WPL: ' + History_WPL_Name, 'QA Name: ' + History_QA_Name, 'Last Comment Name: ' + Last_Comments_Text_Name);
                     // Queue
                     let Ele_Quick_Assign_To = document.createElement('span');
                     Ele_Quick_Assign_To.appendChild(document.createTextNode(' Queue | '));
