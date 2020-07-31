@@ -63,8 +63,8 @@ $(function() {
             $(this).removeClass('tab_option_onlyOne');
             let this_data = $(this).attr('data-scdOption');
             Data_scdOption_arr.indexOf(this_data) < 0 ?
-                $(this).addClass('will_fade_away') :
-                $(this).removeClass('will_fade_away');
+                $(this).addClass('will_fade_away_scd') :
+                $(this).removeClass('will_fade_away_scd');
             if (this_data === Data_scdOption_arr[0]) {
                 $(this).addClass('tab_option_onlyOne');
                 console.log('1th Second Part Filter: ', this_data);
@@ -83,15 +83,21 @@ $(function() {
     let $Tab_Options_Ctn = $('.tab_options_container');
     //// Second Block of Filtering
     $Tab_Options_Ctn.delegate('div', 'click', function() {
-        $Tab_Options.removeClass('tab_option_onlyOne');
-        $(this).addClass('tab_option_onlyOne');
-        let temp_scdOption = $(this).attr('data-scdOption');
-        // could be one same function
-        $Content_Texts.each(function() {
-            $(this).removeClass('scd_Option_hide');
-            if ($(this).attr('data-scdOption') !== temp_scdOption) {
-                $(this).addClass('scd_Option_hide');
-            }
-        })
+        if ($(this).hasClass('tab_option_onlyOne')) {
+            console.log('click on checked one');
+            $Content_Texts.removeClass('scd_Option_hide');
+            $(this).removeClass('tab_option_onlyOne');
+        } else {
+            $Tab_Options.removeClass('tab_option_onlyOne');
+            $(this).addClass('tab_option_onlyOne');
+            let temp_scdOption = $(this).attr('data-scdOption');
+            // could be one same function
+            $Content_Texts.each(function() {
+                $(this).removeClass('scd_Option_hide');
+                if ($(this).attr('data-scdOption') !== temp_scdOption) {
+                    $(this).addClass('scd_Option_hide');
+                }
+            });
+        }
     });
 });

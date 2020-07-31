@@ -75,6 +75,15 @@
     display: none;
 }
 
+.will_fade_away_scd {
+    border: 1px solid #333;
+    pointer-events: none;
+}
+
+.will_fade_away_scd h1 {
+    color: #333;
+}
+
 .tab_options_container .tab_option_onlyOne {
     border-color: #191;
 }
