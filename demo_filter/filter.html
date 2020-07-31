@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filter Demo</title>
+    <link rel="stylesheet" href="index.css">
+
+</head>
+
+<body>
+    <div class="aia_main_container">
+        <div class="filter_options_container" onselectstart="return false">
+            <div class="filter_option_container_1 filter_option_container">
+                <h1 class="filter_option_1_left_desc filter_option_desc">Time: </h1>
+                <p class="filter_option_all filter_option">ALL</p>
+                <p class="filter_1_1 filter_option" data-tags="yesterday">Yesterday</p>
+                <p class="filter_1_2 filter_option" data-tags="today">Today</p>
+                <p class="filter_1_3 filter_option" data-tags="tomorrow">Tomorrow</p>
+            </div>
+            <div class="filter_option_container_2 filter_option_container">
+                <h1 class="filter_option_2_left_desc filter_option_desc">Editer: </h1>
+                <p class="filter_option_all filter_option">ALL</p>
+                <p class="filter_2_1 filter_option" data-tags="xiangyan">Xiangyan</p>
+                <p class="filter_2_2 filter_option" data-tags="xindong">Xindong</p>
+                <p class="filter_2_3 filter_option" data-tags="zhilong">Zhilong</p>
+                <p class="filter_2_4 filter_option" data-tags="yixin">Yixin</p>
+            </div>
+            <div class="filter_option_container_3 filter_option_container">
+                <h1 class="filter_option_3_left_desc filter_option_desc">Product: </h1>
+                <p class="filter_option_all filter_option">ALL</p>
+                <p class="filter_3_1 filter_option" data-tags="p40">P40</p>
+                <p class="filter_3_2 filter_option" data-tags="p30">P30</p>
+                <p class="filter_3_3 filter_option" data-tags="mate30">Mate30</p>
+            </div>
+        </div>
+        <div class="tab_options_container" onselectstart="return false">
+            <div class="tab_1_1" data-scdOption="cn">
+                <h1>CN</h1>
+            </div>
+            <div class="tab_1_2" data-scdOption="ru">
+                <h1>RU</h1>
+            </div>
+            <div class="tab_1_3" data-scdOption="en">
+                <h1>EN</h1>
+            </div>
+            <div class="tab_1_4" data-scdOption="om">
+                <h1>OM</h1>
+            </div>
+            <div class="tab_1_5" data-scdOption="ar">
+                <h1>AR</h1>
+            </div>
+        </div>
+        <div class="content_text_container">
+            <div class="content_text" data-tags="yesterday xiangyan p40" data-scdOption="cn">
+                <h1>cn</h1>
+                <p>yesterday xiangyan p40</p>
+            </div>
+            <div class="content_text" data-tags="yesterday zhilong p40 p30 mate30" data-scdOption="cn">
+                <h1>cn</h1>
+                <p>yesterday zhilong p40 p30 mate30</p>
+            </div>
+            <div class="content_text" data-tags="yesterday today tomorrow zhilong xindong p40 p30 mate30" data-scdOption="cn">
+                <h1>cn</h1>
+                <p>yesterday today tomorrow zhilong xindong p40 p30 mate30</p>
+            </div>
+            <div class="content_text" data-tags="today xindong p40 p30" data-scdOption="ru">
+                <h1>ru</h1>
+                <p>today xindong p40 p30</p>
+            </div>
+            <div class="content_text" data-tags="tomorrow xindong zhilong p40 p30 mate30" data-scdOption="en">
+                <h1>en</h1>
+                <p>tomorrow xindong zhilong p40 p30 mate30</p>
+            </div>
+            <div class="content_text" data-tags="yesterday tomorrow xindong zhilong yixin p40 mate30" data-scdOption="om">
+                <h1>om</h1>
+                <p>yesterday tomorrow xindong zhilong yixin p40 mate30</p>
+            </div>
+            <div class="content_text" data-tags="today tomorrow xindong zhilong p40 mate30" data-scdOption="om">
+                <h1>om</h1>
+                <p>today tomorrow xindong zhilong p40 mate30</p>
+            </div>
+            <div class="content_text" data-tags="yesterday tomorrow xindong yixin p40 mate30" data-scdOption="ar">
+                <h1>ar</h1>
+                <p>yesterday tomorrow xindong yixin p40 mate30</p>
+            </div>
+            <div class="content_text" data-tags="p40 mate30" data-scdOption="ar">
+                <h1>ar</h1>
+                <p>p40 mate30</p>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script src="jquery-1.11.3.min.js"></script>
+<script src="main.js"></script>
+
+</html>

@@ -1,0 +1,80 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    position: relative;
+    background-color: #000;
+    color: #fff;
+}
+
+.aia_main_container {
+    width: 80vw;
+    margin: 4vw auto 100vh auto;
+    border: 1px solid #aaf;
+    padding: 2vw;
+}
+
+.filter_options_container {
+    margin-bottom: 1vw;
+}
+
+.filter_option_container {
+    border-bottom: 1px solid #afa;
+    padding-bottom: 1vw;
+    margin-bottom: 1vw;
+}
+
+.filter_option_container * {
+    display: inline-block;
+    font-size: 1.2vw;
+    border: none;
+    line-height: 1.2;
+    margin-right: 2vw;
+    color: #aaa;
+    cursor: pointer;
+}
+
+.filter_option_desc {
+    color: #fff;
+    min-width: 8vw;
+    font-weight: 900;
+    cursor: default;
+}
+
+.tab_options_container {
+    padding: 2vw 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.tab_options_container>* {
+    border: 1px solid #fff;
+    display: inline-block;
+    min-width: 22%;
+    text-align: center;
+    margin-bottom: 1vw;
+    cursor: pointer;
+}
+
+.tab_options_container div h1 {
+    font-size: 2.5vw;
+}
+
+.content_text {
+    margin-top: 2vw;
+}
+
+.filter_option_container .filter_option_toggleclass {
+    background-color: #a8a;
+    color: #111;
+}
+
+.will_fade_away,
+.scd_Option_hide {
+    display: none;
+}
+
+.tab_options_container .tab_option_onlyOne {
+    border-color: #191;
+}
