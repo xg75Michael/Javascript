@@ -36,8 +36,8 @@
 
     function drawLines(obj1, obj2) {
         let distance = Math.sqrt(
-            Math.abs(obj1.x - obj2.x) +
-            Math.abs(obj1.y - obj2.y)
+            Math.pow(Math.abs(obj1.x - obj2.x), 2) +
+            Math.pow(Math.abs(obj1.y - obj2.y), 2)
         );
         if (distance < distanceLimit) {
             myCtx.beginPath();
@@ -67,7 +67,7 @@
     /// Draw rect
     let rectWidth = 10,
         numbers = 20,
-        distanceLimit = 20,
+        distanceLimit = 300,
         rectArr = [],
         mousePos = {},
         x,
