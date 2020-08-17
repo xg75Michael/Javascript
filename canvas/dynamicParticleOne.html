@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playground</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        width: 100vw;
+        height: 100vh;
+        position: relative;
+        overflow: hidden;
+    }
+</style>
+
+<body>
+    <canvas id="mycanvas">No support for Canvas.</canvas>
+</body>
+<script src="jquery-1.11.3.min.js"></script>
+<script>
+    function randomColor() {
+        return 'rgb(' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ')';
+    }
+
+    function randomRange(min, max) {
+        return Math.random() * (max - min);
+    }
+    let W_W = $(window).width();
+    let W_H = $(window).height();
+    let $MyCanvas = $('#mycanvas');
+    $MyCanvas.attr({
+        'width': W_W,
+        'height': W_H
+    });
+    let myCanvas = $MyCanvas[0];
+    let myCtx = myCanvas.getContext('2d');
+    /// Draw rect
+    let rectWidth = 20;
+    let x = Math.floor(randomRange(0, W_W));
+    let y = Math.floor(randomRange(0, W_H));
+    console.info(x, y);
+    let offsetX = Number(randomRange(0, 1).toFixed(3), 10);
+    let offsetY = Number(randomRange(0, 1).toFixed(3), 10);
+    console.info(offsetX, offsetY);
+    let color = randomColor();
+
+    function draw() {
+        myCtx.clearRect(0, 0, W_W, W_H);
+        myCtx.fillStyle = color;
+        // myCtx.fill();
+        myCtx.fillRect(x, y, rectWidth, rectWidth);
+        offsetX = x > 0 && x < W_W ? offsetX : -offsetX;
+        x += offsetX;
+        offsetY = y > 0 && y < W_H ? offsetY : -offsetY;
+        y += offsetY;
+        // let tox = randomRange(x - 10, x + 10);
+        // let toy = randomRange(y - 10, y + 10);
+    }
+    setInterval(draw, 1.67);
+</script>
+
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playground</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        width: 100vw;
+        height: 100vh;
+        position: relative;
+        overflow: hidden;
+    }
+</style>
+
+<body>
+    <canvas id="mycanvas">No support for Canvas.</canvas>
+</body>
+<script src="jquery-1.11.3.min.js"></script>
+<script>
+    function randomColor() {
+        return 'rgb(' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ')';
+    }
+
+    function randomRange(min, max) {
+        return Number((Math.random() * (max - min) + min).toFixed(2));
+    }
+
+    function drawLines(obj1, obj2) {
+        let distance = Math.sqrt(
+            Math.abs(obj1.x - obj2.x) +
+            Math.abs(obj1.y - obj2.y)
+        );
+        if (distance < distanceLimit) {
+            myCtx.beginPath();
+            myCtx.moveTo(obj1.x, obj1.y);
+            myCtx.lineTo(obj2.x, obj2.y);
+            myCtx.strokeStyle = obj1.color;
+            myCtx.stroke();
+        }
+    }
+    /// requestAnimationFrame compatible
+    window.requestAnimationFrame = window.requestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        function(callback) {
+            setInterval(callback, 16.7);
+        };
+    let W_W = $(window).width(),
+        W_H = $(window).height(),
+        $MyCanvas = $('#mycanvas');
+    $MyCanvas.attr({
+        'width': W_W,
+        'height': W_H
+    });
+    let myCanvas = $MyCanvas[0];
+    let myCtx = myCanvas.getContext('2d');
+    /// Draw rect
+    let rectWidth = 10,
+        numbers = 20,
+        distanceLimit = 20,
+        rectArr = [],
+        mousePos = {},
+        x,
+        y,
+        offsetX,
+        offsetY,
+        color,
+        distance;
+    /// Get random data and sort it into rectArr
+    for (let i = 0; i < numbers; i++) {
+        x = randomRange(0, W_W);
+        y = randomRange(0, W_H);
+        offsetX = randomRange(-1, 1);
+        offsetY = randomRange(-1, 1);
+        color = randomColor();
+        rectArr[i] = {
+            x: x,
+            y: y,
+            offsetX: offsetX,
+            offsetY: offsetY,
+            color: color,
+        }
+    }
+    /// Get mouse moving data and generate a Rect for it
+    window.onmousemove = function(e) {
+        mousePos.x = e.clientX;
+        mousePos.y = e.clientY;
+        mousePos.color = 'rgba(0, 0, 0, 0.3)';
+        mousePos.isMouseIn = true;
+    };
+    window.onmouseout = function(e) {
+        mousePos.isMouseIn = false;
+    };
+
+    function draw() {
+        myCtx.clearRect(0, 0, W_W, W_H);
+        for (let i = 0; i < rectArr.length; i++) {
+            myCtx.fillStyle = rectArr[i].color;
+            myCtx.fillRect(rectArr[i].x - (rectWidth / 2), rectArr[i].y - (rectWidth / 2), rectWidth, rectWidth);
+            /// Change the offset when the rect reachs the boundary
+            rectArr[i].offsetX = rectArr[i].x > 0 && rectArr[i].x < W_W ? rectArr[i].offsetX : -rectArr[i].offsetX;
+            rectArr[i].x += rectArr[i].offsetX;
+            rectArr[i].offsetY = rectArr[i].y > 0 && rectArr[i].y < W_H ? rectArr[i].offsetY : -rectArr[i].offsetY;
+            rectArr[i].y += rectArr[i].offsetY;
+            for (let j = i + 1; j < rectArr.length; j++) {
+                drawLines(rectArr[i], rectArr[j]);
+            }
+        }
+        if (mousePos.isMouseIn) {
+            myCtx.fillStyle = mousePos.color;
+            myCtx.fillRect(mousePos.x - (rectWidth / 2), mousePos.y - (rectWidth / 2), rectWidth, rectWidth)
+            for (let i = 0; i < rectArr.length; i++) {
+                drawLines(rectArr[i], mousePos);
+            }
+        }
+        window.requestAnimationFrame(draw);
+    }
+    draw();
+</script>
+
+</html>
