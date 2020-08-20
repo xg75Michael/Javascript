@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shapes</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        width: 100vw;
+        height: 100vh;
+        position: relative;
+        overflow: hidden;
+    }
+</style>
+
+<body>
+    <canvas id="mycanvas">No support for Canvas.</canvas>
+</body>
+<script src="jquery-1.11.3.min.js"></script>
+<script src="canvas_shapes.js"></script>
+<script>
+    let W_W = $(window).width();
+    let W_H = $(window).height();
+    let $MyCanvas = $('#mycanvas');
+    $MyCanvas.attr({
+        'width': W_W,
+        'height': W_H
+    });
+    let myCanvas = $MyCanvas[0];
+    let myCtx = myCanvas.getContext('2d');
+
+    function randomColor() {
+        return 'rgb(' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ')';
+    }
+    //// Test functions
+    // Draw Shapes
+    _UT.canvasShaps.triangle.call(myCtx, 0, 0, 0, 80, 80, 80, randomColor());
+    _UT.canvasShaps.roundRectQd.call(myCtx, 160, 0, 160, 80, 40, randomColor());
+    [3, 4, 5, 6, 7, 8, 9, 10].map(function(item) {
+        _UT.canvasShaps.regularPolygon.call(myCtx, 160 * (item - 1), 40, 40, item, 0, randomColor());
+    });
+    [4, 3, 2, 1].map(function(item) {
+        _UT.canvasShaps.regularPolygon.call(myCtx, 1600, 40, 10 * item, 5, 20 * item, randomColor());
+    });
+    [1, 2, 3, 4].map(function(item) {
+        _UT.canvasShaps.pointPolygon.call(myCtx, 160 * item, 160, 40, (5 * item + 10), 2 + item, 0, randomColor());
+    });
+    _UT.canvasShaps.hollowMoon.call(myCtx, 800, 160, 40, 30, 10, randomColor());
+    [1, 2, 3, 4, 5, 6, 7, 8, 9].map(function(item) {
+        _UT.canvasShaps.pointPolygon.call(myCtx, 960, 160, 60, 15, 3, 6 * item, randomColor());
+    });
+    // Draw Lines
+    _UT.drawLines.multiRect.call(myCtx, 160, 320, 80, 80, 3, randomColor());
+
+    [1, 2, 3, 4].map(function(item) {
+        _UT.drawLines.regularLines.call(myCtx, 320, 320, 40, 3, 30 * item, randomColor());
+    });
+    [40, -40].map(function(item, index) {
+        _UT.drawLines.commonIcons.call(myCtx, 'angleBrackets', 480 + index * 80, 320, item);
+    });
+    // Test Or
+    // myCtx.rect(0, 0, 200, 100)
+    // myCtx.stroke();
+</script>
+
+</html>
