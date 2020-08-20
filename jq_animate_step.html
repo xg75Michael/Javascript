@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animate options: step</title>
+    <script src="jquery.min.js"></script>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        font-size: 20px;
+    }
+    
+    .outter_box {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        text-align: center;
+        overflow: hidden;
+    }
+    
+    .click_btn {
+        width: 14%;
+        position: relative;
+        display: block;
+        border: 1px solid #000;
+        border-radius: 1vw;
+        padding: 0.5vw 0;
+        margin: 10vw auto 0 auto;
+    }
+    
+    .animate_p {
+        position: relative;
+        top: 10vw;
+        opacity: 0;
+    }
+</style>
+
+<body>
+
+    <div class="outter_box">
+        <div class="click_btn">Click to view the animation</div>
+        <p class="animate_p">Animating Element</p>
+    </div>
+
+</body>
+<script>
+    $(function() {
+        let difY = -8;
+        $Animate_P = $('.animate_p');
+        $Click_btn = $('.click_btn');
+        $Click_btn.on('click', function(e) {
+            $Animate_P.animate({
+                opacity: '1',
+            }, {
+                duration: 1000,
+                easing: 'linear',
+                step: function(now, fx) {
+                    $(this).css('transform', 'translateY(' + difY * fx.pos + 'vw)');
+                },
+            });
+        });
+    });
+</script>
+
+</html>
