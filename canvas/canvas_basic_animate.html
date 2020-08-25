@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fragment Image Effect</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        width: 100vw;
+        height: 10vh;
+        position: relative;
+    }
+    
+    canvas {
+        display: block;
+    }
+    
+    .hidden_img {
+        display: none;
+    }
+</style>
+
+<body>
+    <canvas id="mycanvas">No support for Canvas.</canvas>
+    <div class="hidden_img">
+        <img src="1.jpg" alt="" id="img1">
+        <img src="2.jpg" alt="" id="img2">
+        <img src="3.jpg" alt="" id="img3">
+    </div>
+</body>
+<script src="jquery-1.11.3.min.js"></script>
+<script>
+    let imgWidth = 1920;
+    let imgHeight = 1080;
+    let conW = 960;
+    let conH = 540;
+    let unitW = 30;
+    let unitH = 30;
+    let unitClomNumb = conW / unitW;
+    let unitRowNumb = conH / unitH;
+    let imgUnitW = imgWidth / unitClomNumb;
+    let imgUnitH = imgHeight / unitRowNumb;
+    let $MyCanvas = $('#mycanvas');
+    $MyCanvas.attr({
+        'width': conW,
+        'height': conH
+    });
+    let myCanvas = $MyCanvas[0];
+    let myCtx = myCanvas.getContext('2d');
+
+    function randomColor() {
+        return 'rgb(' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ')';
+    }
+
+    function clearCanvas() {
+        myCtx.clearRect(0, 0, conW, conH);
+    }
+    // Ready
+    $(function() {
+        // image size needs to be same
+        let img1 = $('#img1')[0];
+        let img2 = $('#img2')[0];
+        let img3 = $('#img3')[0];
+        let imgArr = [img1, img2, img3];
+        let imgNumb = imgArr.length - 1;
+        let loopNumb = 0;
+        myCtx.beginPath();
+
+        function handleDrawing(img, i, j) {
+            myCtx.drawImage(img, imgUnitW * i, imgUnitH * j, imgUnitW, imgUnitH, unitW * i, unitH * j, unitW, unitH);
+        }
+
+        function randomArr(arr) {
+            let cloneArr = arr.slice(0);
+            let len = cloneArr.length;
+            for (let i = 0; i < len; i++) {
+                let index = Math.floor(Math.random() * cloneArr.length);
+                let temp = cloneArr[index];
+                cloneArr[index] = cloneArr[i];
+                cloneArr[i] = temp;
+            }
+            return cloneArr;
+        }
+        // 二维数组 posArr 位置
+        let temparr = [];
+        let tempIndex = 0;
+        for (let j = 0; j < unitRowNumb; j++) {
+            for (let i = 0; i < unitClomNumb; i++) {
+                temparr.push([i, j]);
+            }
+        }
+        temparr = randomArr(temparr);
+
+        function drawLoop() {
+            if (loopNumb > imgNumb) {
+                loopNumb = 0;
+            }
+            let intervalRef = setInterval(() => {
+                handleDrawing(imgArr[loopNumb], temparr[tempIndex][0], temparr[tempIndex][1]);
+                tempIndex++;
+                if (tempIndex >= temparr.length) {
+                    clearInterval(intervalRef);
+                    tempIndex = 0;
+                    loopNumb++;
+                }
+            }, 1.66666);
+        }
+        $MyCanvas.on('click', function() {
+            drawLoop();
+        });
+        drawLoop();
+    });
+</script>
+
+</html>
