@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Particle Effect</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        width: 100vw;
+        height: 100vh;
+        position: relative;
+        overflow: hidden;
+    }
+</style>
+
+<body>
+    <canvas id="mycanvas">No support for Canvas.</canvas>
+</body>
+<script src="../jquery-1.11.3.min.js"></script>
+<script>
+    let W_W = $(window).width();
+    let W_H = $(window).height();
+    let $MyCanvas = $('#mycanvas');
+    $MyCanvas.attr({
+        'width': W_W,
+        'height': W_H,
+    });
+    let myCanvas = $MyCanvas[0];
+    let myCtx = myCanvas.getContext('2d');
+
+    function randomColor() {
+        return 'rgb(' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ')';
+    }
+
+    function clearCanvas() {
+        myCtx.clearRect(0, 0, W_W, W_H);
+    }
+
+    // Start
+    let xStep = 6;
+    let yStep = 4;
+    let unitW = 4;
+    let unitH = 4;
+    let dText = 'HunterG';
+    $(function() {
+        myCtx.save();
+        myCtx.font = 'bold 8vw serif';
+        myCtx.textAlign = 'center';
+        myCtx.textBaseline = 'middle';
+        myCtx.fillStyle = randomColor();
+        myCtx.fillText(dText, W_W / 2, W_H / 2);
+        let canData = myCtx.getImageData(0, 0, W_W, W_H);
+        let buffer32 = new Uint32Array(canData.data.buffer);
+        clearCanvas();
+
+        function drawUnits() {
+            clearCanvas();
+            for (let i = 0; i < myCanvas.width; i += xStep) {
+                for (let j = 0; j < myCanvas.height; j += yStep) {
+                    if (buffer32[j * myCanvas.width + i]) {
+                        let aOffset = (Math.random() - 0.5) * 5;
+                        let aScale = Math.random() * 0.5 + 0.5;
+                        myCtx.fillStyle = randomColor();
+                        myCtx.fillRect(i + aOffset, j + aOffset, unitW * aScale, unitH * aScale);
+                    }
+                }
+            }
+        }
+        let textInter = setInterval(() => {
+            drawUnits();
+        }, 166.6666);
+    });
+</script>
+
+</html>
