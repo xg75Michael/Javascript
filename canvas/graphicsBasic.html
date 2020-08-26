@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drawing Basic Graphics</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        width: 100vw;
+        height: 100vh;
+        position: relative;
+        overflow: hidden;
+    }
+</style>
+
+<body>
+    <canvas id="mycanvas">No support for Canvas.</canvas>
+</body>
+<script src="../jquery-1.11.3.min.js"></script>
+<script>
+    let W_W = $(window).width();
+    let W_H = $(window).height();
+    let $MyCanvas = $('#mycanvas');
+    $MyCanvas.attr({
+        'width': W_W,
+        'height': W_H,
+    });
+    let myCanvas = $MyCanvas[0];
+    let myCtx = myCanvas.getContext('2d');
+
+    function randomColor() {
+        return 'rgb(' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ')';
+    }
+
+    function clearCanvas() {
+        myCtx.clearRect(0, 0, W_W, W_H);
+    }
+
+    // Start
+    let tableWidth = 1200;
+    let tableHeight = 600;
+    let stepX = 50;
+    let stepY = 50;
+    let axisLine = 5;
+    let axisXBottom = (W_H + tableHeight) / 2;
+    let axisXTop = (W_H - tableHeight) / 2;
+    let axisYLeft = (W_W - tableWidth) / 2;
+    let axisYRight = (W_W + tableWidth) / 2;
+    let dataArr = [];
+
+    // Get random data and push it into dataArr
+    for (let i = stepX; i < tableWidth; i += stepX) {
+        dataArr.push({
+            y: Math.floor(Math.random() * 550),
+            x: i + axisYLeft,
+            dy: axisXBottom,
+        });
+    }
+    console.info(dataArr);
+
+    // Draw Axis
+    myCtx.beginPath();
+    myCtx.save();
+    myCtx.fillStyle = randomColor();
+    myCtx.strokeStyle = randomColor();
+    myCtx.arc(axisYLeft, axisXBottom, 5, 0, Math.PI * 2, true);
+    myCtx.fill();
+    // X Axis
+    myCtx.moveTo(axisYLeft, axisXBottom);
+    myCtx.lineTo(axisYRight, axisXBottom);
+    myCtx.lineTo(axisYRight, axisXBottom - 10);
+    myCtx.lineTo(axisYRight + 20, axisXBottom);
+    myCtx.lineTo(axisYRight, axisXBottom + 10);
+    myCtx.lineTo(axisYRight, axisXBottom);
+    myCtx.font = 'bold 16px Arial';
+    myCtx.textAlign = 'center';
+    myCtx.textBaseline = "hanging";
+    for (stepX; stepX < tableWidth; stepX += 50) {
+        myCtx.moveTo(axisYLeft + stepX, axisXBottom);
+        myCtx.lineTo(axisYLeft + stepX, axisXBottom + axisLine);
+        myCtx.fillText(stepX, axisYLeft + stepX, axisXBottom + axisLine + 10);
+    }
+    // Y Axis
+    myCtx.moveTo(axisYLeft, axisXBottom);
+    myCtx.lineTo(axisYLeft, axisXTop);
+    myCtx.lineTo(axisYLeft - 10, axisXTop);
+    myCtx.lineTo(axisYLeft, axisXTop - 20);
+    myCtx.lineTo(axisYLeft + 10, axisXTop);
+    myCtx.lineTo(axisYLeft, axisXTop);
+    myCtx.textAlign = 'right';
+    myCtx.textBaseline = "middle";
+    for (stepY; stepY < tableHeight; stepY += 50) {
+        myCtx.moveTo(axisYLeft, axisXBottom - stepY);
+        myCtx.lineTo(axisYLeft - axisLine, axisXBottom - stepY);
+        myCtx.fillText(stepY, axisYLeft - axisLine - 10, axisXBottom - stepY);
+    }
+    myCtx.closePath();
+    myCtx.stroke();
+
+    // Draw dataArr lines
+    myCtx.beginPath();
+    myCtx.lineWidth = 20;
+    dataArr.map(function(data, index) {
+        myCtx.moveTo(data.x, data.dy);
+        myCtx.lineTo(data.x, data.dy - data.y);
+    });
+    myCtx.closePath();
+    myCtx.stroke();
+</script>
+
+</html>
