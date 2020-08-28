@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CN Freelace-Pro Section4</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        width: 100vw;
+        overflow-x: hidden;
+    }
+    
+    body>div {
+        display: block;
+        position: relative;
+    }
+    
+    .header {
+        display: block;
+        position: fixed;
+        width: 100%;
+        height: 80px;
+        z-index: 99;
+        background-color: #000;
+    }
+    
+    .spacer {
+        width: 100vw;
+        height: 100vh;
+    }
+    /* layout init end */
+    
+    .content_outter {
+        width: 100%;
+        display: block;
+        position: relative;
+    }
+    
+    .text_wrap {
+        width: 60%;
+        display: block;
+        margin: 0 auto 0.5vw;
+        text-align: center;
+        line-height: 1.5;
+    }
+    
+    .text_wrap p.grey_text {
+        font-size: 1.458333333333333vw;
+        color: #555;
+        padding-top: 3.125vw;
+    }
+    
+    .text_wrap h2 {
+        font-size: 2.5vw;
+        padding-top: 1.5625vw;
+    }
+    
+    .text_wrap p:not(.grey_text) {
+        font-size: 1.145833333333333vw;
+        padding-top: 1.5625vw;
+    }
+    
+    .img_wrap {
+        width: 60%;
+        margin: 0 auto;
+    }
+    
+    .img_wrap img {
+        width: 100%;
+        display: block;
+    }
+    
+    .plus_btn_wrap {
+        position: absolute;
+        width: 2.083333333333333vw;
+        height: 2.083333333333333vw;
+        background-color: #db3b1b;
+        border-radius: 50%;
+    }
+    
+    .plus_btn1_wrap .plus_text_wrap h2,
+    .plus_btn2_wrap .plus_text_wrap h2,
+    .plus_btn3_wrap .plus_text_wrap h2 {
+        font-size: 1.302083333333333vw;
+    }
+    
+    .plus_btn1_wrap .plus_text_wrap p,
+    .plus_btn2_wrap .plus_text_wrap p,
+    .plus_btn3_wrap .plus_text_wrap p {
+        font-size: 1.041666666666667vw;
+        margin-top: 1vw;
+    }
+    
+    .plus_btn1_wrap {
+        top: 51.6%;
+        left: 40.9%;
+    }
+    
+    .plus_btn1_wrap .plus_text_wrap {
+        width: 12vw;
+        top: -1vw;
+        left: 33vw;
+        position: absolute;
+    }
+    
+    .plus_btn2_wrap {
+        left: 43.7%;
+        top: 65%;
+    }
+    
+    .plus_btn2_wrap .plus_text_wrap {
+        width: 18vw;
+        top: 4vw;
+        left: -38vw;
+        position: absolute;
+        text-align: right;
+    }
+    
+    .plus_btn3_wrap {
+        left: 51.2%;
+        top: 67.3%;
+    }
+    
+    .plus_btn3_wrap .plus_text_wrap {
+        width: 18vw;
+        position: absolute;
+        top: 10vw;
+        left: 23vw;
+    }
+    
+    .plus_btn_wrap .plus_text_wrap {
+        opacity: 0;
+    }
+    
+    .plus_btn_wrap .plus_text_wrap.active {
+        transition: opacity 0.3s 1s ease-in;
+        opacity: 1;
+    }
+    
+    .plus_btn_wrap span {
+        position: relative;
+        display: block;
+        left: 0;
+        top: 0;
+        font-size: 1.3vw;
+        font-weight: bold;
+        text-align: center;
+        line-height: 2.083333333333333vw;
+        color: #fff;
+        cursor: pointer;
+        user-select: none;
+        z-index: 2;
+        transition: transform 0.1s linear;
+    }
+    
+    .plus_btn_wrap span.active {
+        transform: rotate(45deg);
+    }
+    
+    .plus_btn_wrap span::before,
+    .plus_btn_wrap span::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: transparent;
+        box-sizing: border-box;
+        border: 1px solid #fff;
+        border-radius: 50%;
+    }
+    
+    .plus_btn_wrap span::before {
+        animation: 2.4s circleSpread linear infinite;
+    }
+    
+    .plus_btn_wrap span::after {
+        animation: 2.4s circleSpread 1.2s linear infinite;
+    }
+    
+    #plus_canvas1 {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    
+    #plus_canvas2 {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+    
+    #plus_canvas3 {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    
+    @keyframes circleSpread {
+        0% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 0;
+            transform: scale(2);
+        }
+    }
+</style>
+
+<body>
+    <div class="header"></div>
+    <div class="spacer"></div>
+    <div class="spacer"></div>
+    <div class="content_outter">
+        <div class="text_wrap">
+            <p class="grey_text">双重主动降噪</p>
+            <h2>降噪一开，置身喧嚣之外</h2>
+            <p> 采用两颗高灵敏度麦克风，分别拾取耳内、耳外环境噪音，并通过低频强劲的 14 mm 大动圈单元精准生成降噪声波，以消除外界噪音。出众的降噪性能让你无论身在何处，都能静享纯净音乐。 </p>
+        </div>
+        <div class="img_wrap">
+            <img src="freelace_pro.png" alt="">
+        </div>
+        <div class="plus_btn1_wrap plus_btn_wrap">
+            <span>+</span>
+            <canvas id="plus_canvas1">Your browser does not support canvas.</canvas>
+            <div class="plus_text_wrap">
+                <h2>外向麦克风</h2>
+                <p>拾取耳外噪音，用于生成降噪声波抵消环境噪音。</p>
+            </div>
+        </div>
+        <div class="plus_btn2_wrap plus_btn_wrap">
+            <span>+</span>
+            <canvas id="plus_canvas2">Your browser does not support canvas.</canvas>
+            <div class="plus_text_wrap">
+                <h2>14 mm 动圈单元</h2>
+                <p>低频灵敏度更高的大直径动圈单元带来强劲的降噪声波，大幅提升降噪效果。</p>
+            </div>
+        </div>
+        <div class="plus_btn3_wrap plus_btn_wrap">
+            <span onselect="return false">+</span>
+            <canvas id="plus_canvas3">Your browser does not support canvas.</canvas>
+            <div class="plus_text_wrap">
+                <h2>内向麦克风</h2>
+                <p>拾取耳内残余噪音，再一次生成降噪声波抵消噪音，双重降噪更深沉。</p>
+            </div>
+        </div>
+    </div>
+    <div class="spacer"></div>
+    <div class="spacer"></div>
+    <div class="spacer"></div>
+</body>
+<script>
+    window.onload = function() {
+        function randomColor() {
+            return 'rgb(' + Math.random() * 255 + ',' + Math.random() * 255 + ',' + Math.random() * 255 + ')';
+        }
+        document.querySelectorAll('.spacer').forEach(function(e) {
+            e.style.backgroundColor = randomColor();
+        });
+
+        // Init end
+        let winW = window.screen.availWidth;
+        let winH = window.screen.availHeight;
+        let circelR = 0.0208333333333333 * winW;
+        let can1Width = 0.3125 * winW;
+        let can1Height = 0.0208333333333333 * winW;
+        let can2Width = 0.2083333333333333 * winW;
+        let can2Height = 0.0625 * winW;
+        let can3Width = 0.2135416666666667 * winW;
+        let can3Height = 0.125 * winW;
+        let dashData = [10, 6];
+        let lineColor = '#00f';
+        // canvas 1
+        let myCan1 = document.getElementById('plus_canvas1');
+        myCan1.width = can1Width;
+        myCan1.height = can1Height;
+        let ctx1 = myCan1.getContext('2d');
+        console.info(ctx1);
+        // canvas 2
+        let myCan2 = document.getElementById('plus_canvas2');
+        myCan2.width = can2Width;
+        myCan2.height = can2Height;
+        let ctx2 = myCan2.getContext('2d');
+        console.info(ctx2);
+        // canvas 3
+        let myCan3 = document.getElementById('plus_canvas3');
+        myCan3.width = can3Width;
+        myCan3.height = can3Height;
+        let ctx3 = myCan3.getContext('2d');
+        console.info(ctx3);
+        // // Common Setting
+        let lineWidth = 1;
+        [ctx1, ctx2, ctx3].map(i => {
+            i.strokeStyle = lineColor;
+            i.lineWidth = lineWidth;
+        });
+        let dashLen = 2;
+        let dashOffset = 4;
+        let time = 1000;
+        let lineObj1 = {
+            ctx: ctx1,
+            x1: circelR,
+            y1: circelR / 2,
+            x2: myCan1.width,
+            y2: circelR / 2,
+            dashLen: dashLen,
+            dashOffset: dashOffset,
+            time: time,
+            callback: function() {
+                console.info('complete')
+            },
+        };
+        let lineObj2_1 = {
+            ctx: ctx2,
+            x1: can2Width - circelR / 2,
+            y1: circelR,
+            x2: can2Width - circelR / 2,
+            y2: can2Height - 2,
+            dashLen: dashLen,
+            dashOffset: dashOffset,
+            time: time * 0.3,
+            callback: function() {
+                return StraightDashLine(lineObj2_2);
+            },
+        };
+        let lineObj2_2 = {
+            ctx: ctx2,
+            x1: can2Width - circelR / 2,
+            y1: can2Height - 2,
+            x2: 0,
+            y2: can2Height - 2,
+            dashLen: dashLen,
+            dashOffset: dashOffset,
+            time: time * 0.7,
+            callback: function() {
+                console.info('complete');
+            },
+        };
+        let lineObj3_1 = {
+            ctx: ctx3,
+            x1: circelR / 2,
+            y1: circelR,
+            x2: circelR / 2,
+            y2: can3Height - 2,
+            dashLen: dashLen,
+            dashOffset: dashOffset,
+            time: time * 0.4,
+            callback: function() {
+                return StraightDashLine(lineObj3_2);
+            },
+        };
+        let lineObj3_2 = {
+            ctx: ctx3,
+            x1: circelR / 2,
+            y1: can3Height - 2,
+            x2: can3Width,
+            y2: can3Height - 2,
+            dashLen: dashLen,
+            dashOffset: dashOffset,
+            time: time * 0.6,
+            callback: function() {
+                console.info('complete');
+            },
+        };
+
+        function StraightDashLine(obj) {
+            let distance = Math.sqrt(Math.pow(obj.x2 - obj.x1, 2) + Math.pow((obj.y2 - obj.y1), 2));
+            let unitLen = obj.dashLen + obj.dashOffset;
+            let times = distance / unitLen;
+            let unitX = (obj.x2 - obj.x1) / times;
+            let unitY = (obj.y2 - obj.y1) / times;
+            let stepX = unitX * (obj.dashLen / unitLen);
+            let stepY = unitY * (obj.dashLen / unitLen);
+            let i = 0;
+            console.info('unitX', unitX);
+            console.info('unitY', unitY);
+            console.info('stepX', stepX);
+            console.info('stepY', stepY);
+            console.info('Line total distance', distance);
+            obj.ctx.save();
+            let tempInterval = setInterval(() => {
+                obj.ctx.moveTo(obj.x1 + unitX * i, obj.y1 + unitY * i + 0.5);
+                obj.ctx.lineTo(obj.x1 + unitX * i + stepX, obj.y1 + unitY * i + stepY + 0.5);
+                obj.ctx.stroke();
+                i++;
+                console.info(obj.x1 + unitX * i, obj.y1 + unitY * i);
+                if (i >= times) {
+                    clearInterval(tempInterval);
+                    obj.callback();
+                }
+            }, obj.time / times);
+            obj.ctx.restore();
+        }
+        console.info('can1width: ' + can1Width);
+        document.querySelectorAll('.plus_btn_wrap span').forEach(function(i) {
+            i.onclick = function(e) {
+                let thisClass = this.className;
+                let siblingClass = this.nextElementSibling.nextElementSibling.className;
+                if (!/active/g.test(thisClass)) {
+                    // Animation time
+                    this.className += 'active';
+                    this.nextElementSibling.nextElementSibling.className += ' active';
+                    switch (this.nextElementSibling.getAttribute('id')) {
+                        case 'plus_canvas1':
+                            console.info('canvas1');
+                            StraightDashLine(lineObj1);
+                            break;
+                        case 'plus_canvas2':
+                            console.info('canvas2');
+                            StraightDashLine(lineObj2_1);
+                            break;
+                        case 'plus_canvas3':
+                            console.info('canvas3');
+                            StraightDashLine(lineObj3_1);
+                            break;
+
+                        default:
+                            console.info('There is no id attribute.');
+                            break;
+                    }
+                }
+                // else {
+                //     // Reset status
+                //     this.className = thisClass.split(' ').filter((d) => d !== 'active' || d == ' ').join(' ');
+                //     this.nextElementSibling.nextElementSibling.className = siblingClass.split(' ').filter((d) => d !== 'active' || d == ' ').join(' ');
+
+                //     switch (this.nextElementSibling.getAttribute('id')) {
+                //         case 'plus_canvas1':
+                //             console.info(lineObj1);
+                //             ctx1.clearRect(-can1Width / 2, -can1Height / 2, can1Width * 2, can1Height * 2);
+                //             console.info(lineObj1);
+                //             break;
+                //         case 'plus_canvas2':
+                //             ctx2.clearRect(0, 0, can2Width, can2Height);
+                //             console.info('canvas2');
+                //             break;
+                //         case 'plus_canvas3':
+                //             ctx3.clearRect(0, 0, can3Width, can3Height);
+                //             console.info('canvas3');
+                //             break;
+                //     }
+                // }
+            };
+        });
+    };
+</script>
+
+</html>
