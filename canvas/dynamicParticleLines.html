@@ -66,7 +66,7 @@
     let myCtx = myCanvas.getContext('2d');
     /// Draw rect
     let rectWidth = 10,
-        numbers = 20,
+        numbers = 30,
         distanceLimit = 300,
         rectArr = [],
         mousePos = {},
@@ -103,7 +103,11 @@
     };
 
     function draw() {
-        myCtx.clearRect(0, 0, W_W, W_H);
+        myCtx.save();
+        // Leave tail
+        myCtx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        myCtx.fillRect(0, 0, W_W, W_H);
+        myCtx.restore();
         for (let i = 0; i < rectArr.length; i++) {
             myCtx.fillStyle = rectArr[i].color;
             myCtx.fillRect(rectArr[i].x - (rectWidth / 2), rectArr[i].y - (rectWidth / 2), rectWidth, rectWidth);
