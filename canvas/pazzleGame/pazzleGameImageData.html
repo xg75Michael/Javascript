@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pazzle Game</title>
+    <link rel="stylesheet" href="swiper.css">
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        width: 100vw;
+        overflow-x: hidden;
+    }
+    
+    body>div {
+        display: block;
+        position: relative;
+    }
+    
+    .header {
+        display: block;
+        position: fixed;
+        width: 100%;
+        height: 80px;
+        z-index: 99;
+        background-color: #000;
+    }
+    
+    .spacer {
+        width: 100vw;
+        height: 100vh;
+    }
+    /* layout init end */
+    
+    .out_bg_wrap {
+        width: 100%;
+        height: 600vh;
+    }
+    
+    .sticky_wrap {
+        position: sticky;
+        top: 80px;
+        width: 100%;
+        height: calc(100vh - 80px);
+        background-color: #ccc;
+    }
+    
+    .can_wrap {
+        position: relative;
+        display: block;
+        width: 95%;
+        height: 90%;
+        margin: auto;
+        background-color: #aaa;
+    }
+</style>
+
+<body>
+    <div class="header"></div>
+    <div class="spacer"></div>
+    <div class="spacer"></div>
+    <div class="out_bg_wrap">
+        <div class="sticky_wrap">
+            <div class="can_wrap">
+                <canvas id="mycan"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="spacer"></div>
+    <div class="spacer"></div>
+    <div class="spacer"></div>
+
+    <script src="../ScrollMagic.min.js"></script>
+    <script src="../debug.addIndicators.min.js"></script>
+    <script src="../TweenMax.min.js"></script>
+    <script src="../animation.gsap.min.js"></script>
+    <script src="../jquery-1.11.3.min.js"></script>
+    <script>
+        function randomColor() {
+            return 'rgb(' + Math.random() * 255 + ',' + Math.random() * 255 + ',' + Math.random() * 255 + ')';
+        }
+        document.querySelectorAll('.spacer').forEach(function(e) {
+            e.style.backgroundColor = randomColor();
+        });
+        // Start
+        $(function() {
+            console.info('ready');
+            let winWidth = $(window).width();
+            let winHeight = $(window).height();
+            let canWidth = $('.can_wrap').width();
+            let canHeight = $('.can_wrap').height();
+            $('#mycan').attr({
+                width: canWidth,
+                height: canHeight,
+            });
+            let rIndex = 1;
+            let rCount = 4;
+            let cIndex = 1;
+            let cCount = 4;
+            let sImgW = 40;
+            let sImgH = 65;
+            let posX = 10;
+            let posY = 10;
+            let canMapData;
+            let canMapData32;
+            let targetColor;
+            let boost = 10;
+            if ($('#mycan')[0].getContext('2d')) {
+                let myCtx = $('#mycan')[0].getContext('2d');
+                // console.info(myCtx);
+                let ttImg = new Image();
+                ttImg.onload = function() {
+                    console.info('img onload');
+                    // draw map
+                    myCtx.fillStyle = '#14274e';
+                    myCtx.fillRect(0, 0, canWidth, canHeight);
+                    myCtx.fillStyle = '#aaf';
+                    myCtx.fillRect(10, 10, 300, sImgH);
+                    myCtx.fillRect(310, 10, sImgW, 400);
+                    myCtx.fillRect(310, 410, 500, sImgH);
+                    myCtx.fillRect(810, 410, sImgW, 200);
+                    myCtx.fillRect(810, 610, 200, sImgH);
+                    myCtx.fillRect(1010, 610 + sImgH, sImgW, -500 + sImgH);
+                    myCtx.fillRect(1010, 110 + 2 * sImgH, canWidth, sImgH);
+                    myCtx.fillStyle = '#000';
+                    myCtx.fillRect(canWidth - 20, 110 + 2 * sImgH, 10, sImgH);
+                    myCtx.fillStyle = '#fff';
+                    myCtx.fillRect(canWidth - 10, 110 + 2 * sImgH, 10, sImgH);
+
+                    canMapData = myCtx.getImageData(0, 0, canWidth, canHeight);
+                    canMapData32 = new Uint32Array(canMapData.data.buffer);
+                    console.info(canMapData32);
+                    targetColor = canMapData32[10 * canWidth + 10];
+                    // for (let col = 0; col < canWidth / 100; col++) {
+                    //     for (let row = 0; row < canHeight / 100; row++) {
+                    //         console.info(canMapData32[col]);
+                    //     }
+                    // }
+
+
+
+                    setInterval(() => {
+                        myCtx.fillStyle = '#14274e';
+                        myCtx.fillRect(0, 0, canWidth, canHeight);
+                        myCtx.putImageData(canMapData, 0, 0);
+                        myCtx.fillStyle = 'rgba(141, 255, 150, 1)';
+                        // myCtx.fillRect(posX - 30, posY - 30, sImgW + 60, sImgH + 60);
+                        myCtx.drawImage(ttImg, sImgW * (rIndex - 1), sImgH * (cIndex - 1), sImgW, sImgH, posX, posY, sImgW, sImgH);
+                        rIndex = rIndex < rCount ? rIndex + 1 : 1;
+                    }, 66.67 * 2);
+                };
+                ttImg.src = 'tt.jpg'
+            }
+
+            $(document).keydown(function(event) {
+                // event.preventDefault();
+                // console.info(event);
+                if (event.shiftKey) {
+                    boost = 30;
+                } else {
+                    boost = 10;
+                }
+                if (event.which == 38 || event.which == 40) {
+                    event.preventDefault();
+                }
+                if (canMapData32[canWidth * posY + posX + sImgW - 1] !== targetColor ||
+                    canMapData32[canWidth * posY + posX] !== targetColor ||
+                    canMapData32[canWidth * (posY + sImgH - 1) + posX] !== targetColor ||
+                    canMapData32[canWidth * (posY + sImgH - 1) + posX + sImgW - 1] !== targetColor) {
+                    console.info('Game Over!');
+                    // alert('You died!');
+
+                } else {
+                    console.info('moving');
+                    var keyNum = event.which;
+                    // rIndex = 1;
+                    switch (keyNum) {
+                        case 37:
+                            // console.info('left');
+                            cIndex = 2;
+                            if (posX > 10) {
+                                posX -= boost;
+                            }
+                            break;
+                        case 38:
+                            // console.info('top');
+                            cIndex = 4;
+                            if (posY > 10) {
+                                posY -= boost;
+                            }
+                            break;
+                        case 39:
+                            // console.info('right');
+                            cIndex = 3;
+                            if (posX < canWidth - sImgW - 10) {
+                                posX += boost;
+                            }
+                            break;
+                        case 40:
+                            // console.info('bottom');
+                            cIndex = 1;
+                            if (posY < canHeight - sImgH - 10) {
+                                posY += boost;
+                            }
+                            break;
+                        default:
+                            break;
+
+                    }
+                }
+
+            });
+
+
+            // let controller = new ScrollMagic.Controller(),
+            //     myTT = new TimelineMax();
+            // myTT.to('.txt_wrap h2', 1, {
+            //     ease: Power3.easeOut,
+            //     y: -0.2 * winHeight,
+            //     alpha: 0,
+            // }, 'stage1Flyin');
+            // let tt = new ScrollMagic.Scene({
+            //         triggerElement: '.out_bg_wrap',
+            //         duration: '500%',
+            //         triggerHook: 0,
+            //     })
+            //     .setTween(myTT)
+            //     .addIndicators({
+            //         name: "TT",
+            //     })
+            //     .addTo(controller);
+        });
+    </script>
+</body>
+
+</html>
