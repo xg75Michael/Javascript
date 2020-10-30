@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Mate40 Pro Design</title>
+    <link rel="stylesheet" href="swiper.css">
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        width: 100vw;
+        overflow-x: hidden;
+    }
+    
+    body>div {
+        display: block;
+        position: relative;
+    }
+    
+    .header {
+        display: block;
+        position: fixed;
+        width: 100%;
+        height: 80px;
+        z-Index: 99;
+        background-color: #000;
+    }
+    
+    .spacer {
+        width: 100vw;
+        height: 100vh;
+    }
+    /* layout init end */
+    
+    .out_bg_wrap {
+        width: 100%;
+        height: 600vh;
+    }
+    
+    .sticky_wrap {
+        position: sticky;
+        display: flex;
+        flex-direction: column;
+        top: 80px;
+        width: 80%;
+        height: calc(100vh - 80px);
+        margin: 0 auto;
+        background-color: #ccc;
+    }
+    
+    .design_title {
+        position: relative;
+        padding: 40px 0;
+        text-align: right;
+        font-size: 80px;
+        line-height: 1.25;
+    }
+    
+    .can_wrap {
+        position: relative;
+        display: block;
+        width: 100%;
+        flex-grow: 1;
+        margin: auto;
+        background-color: #aaa;
+    }
+    
+    .spacer_btm {
+        width: 100%;
+        height: 60px;
+    }
+</style>
+
+<body>
+    <div class="header"></div>
+    <div class="spacer"></div>
+    <div class="spacer"></div>
+    <div class="out_bg_wrap">
+        <div class="sticky_wrap">
+            <h2 class="design_title">Recognisable at a Glance</h2>
+            <div class="can_wrap">
+                <canvas id="mycan"></canvas>
+            </div>
+            <div class="spacer spacer_btm"></div>
+        </div>
+    </div>
+    <div class="spacer"></div>
+    <div class="spacer"></div>
+    <div class="spacer"></div>
+    <script src="../jquery-1.11.3.min.js"></script>
+    <script>
+        function randomColor() {
+            return 'rgb(' + Math.random() * 255 + ',' + Math.random() * 255 + ',' + Math.random() * 255 + ')';
+        }
+        document.querySelectorAll('.spacer').forEach(function(e) {
+            e.style.backgroundColor = randomColor();
+        });
+        // Start
+        $(function() {
+            console.info('ready');
+            let winWidth = $(window).width();
+            let winHeight = $(window).height();
+            let canWidth = $('.can_wrap').width();
+            let canHeight = $('.can_wrap').height();
+            $('#mycan').attr({
+                width: canWidth,
+                height: canHeight,
+            });
+            if ($("#mycan")[0].getContext("2d")) {
+                let ctx = $("#mycan")[0].getContext("2d");
+                let imgArr = [];
+                let imgNumb = 110;
+                let imgDefereds = new Array(imgNumb).fill(0).map(function(d, i) {
+                    let dfd = $.Deferred();
+                    let loadImg = new Image();
+                    let imgName = (i / 1000).toFixed(3).replace('.', '').toString();
+
+                    function defImg() {
+                        loadImg.onload = function(e) {
+                            setTimeout(() => {
+                                console.info('A img loaded');
+                                ctx.drawImage(loadImg, 0, 0, 960, 540);
+                                dfd.resolve();
+                            }, 100);
+                        };
+                        loadImg.src = 'n/' + imgName + '.jpg ';
+                        imgArr.push(loadImg);
+                        return dfd;
+                    }
+                    return defImg(dfd);
+                    // imgDefereds.push(defImg(dfd));
+                })
+                console.info(imgDefereds);
+                $.when.apply(null, imgDefereds)
+                    .done(function() {
+                        console.info('All img loaded');
+                        console.info(imgArr);
+                        // TODO modify the canvas here!!
+                    });
+            }
+        });
+    </script>
+</body>
+
+</html>
