@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+    
+    .outter {
+        display: flex;
+        width: 100%;
+        height: 100vh;
+        background-color: #aaaaaa;
+        align-items: center;
+    }
+    
+    .inner {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-left: 400px;
+        background-color: #fff;
+    }
+    
+    .btn {
+        font-size: 32px;
+        cursor: pointer;
+        user-select: none;
+    }
+    
+    .box {
+        display: none;
+        padding: 2vw 6vw;
+        background-color: #0a2;
+        overflow: hidden;
+    }
+    
+    .box p {
+        font-size: 48px;
+    }
+</style>
+
+<body>
+    <div class="outter">
+        <div class="inner">
+            <div class="btn">click</div>
+            <div class="box">
+                <p>美丽善良的客户</p>
+                <p>美丽善良的客户</p>
+                <p>美丽善良的客户</p>
+                <p>美丽善良的客户</p>
+                <p>美丽善良的客户</p>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="jquery.min.js"></script>
+<script>
+    $(function() {
+        // $('.btn').on('click', function() {
+        //     $('.box').slideToggle(1000, 'linear');
+        // });
+        $('.btn').on('click', function() {
+            let dur = 600;
+            $('.box').toggleClass('active');
+            if ($('.box').hasClass('active')) {
+                $('.box').css({
+                    'display': 'block',
+                    'height': 'auto',
+                });
+                let tempHeight = $('.box').height();
+                let startHeight = 0;
+                $('.box').css('height', startHeight);
+                let tempInter = setInterval(() => {
+                    startHeight += tempHeight / (dur / 60);
+                    $('.box').css('height', startHeight);
+                    startHeight >= tempHeight ? clearInterval(tempInter) : null;
+                }, dur / 60);
+            } else {
+                let tempHeight = $('.box').height();
+                let startHeight = tempHeight;
+                $('.box').css('height', startHeight);
+                let tempInter = setInterval(() => {
+                    startHeight -= tempHeight / (dur / 60);
+                    $('.box').css('height', startHeight);
+                    startHeight <= 0 ?
+                        (clearInterval(tempInter),
+                            $('.box').css({
+                                'display': 'none',
+                            })) :
+                        null;
+                }, dur / 60);
+            }
+        });
+    })
+</script>
+
+</html>
