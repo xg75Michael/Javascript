@@ -8,7 +8,7 @@
 // @grant           none
 // ==/UserScript==
 ;
-console.info('Monkey ShortCuts');
+console.info('Monkey ShortCuts0721');
 const KEYCODEMAP = {
 	'8': 'BackSpace BackSpace',
 	'9': 'Tab Tab',
@@ -156,9 +156,46 @@ const KEYCODEMAP = {
 	'252': 'asciicircum degree',
 	'253': '3 sterling',
 	'254': 'Mode_switch',
+};
+const HREF = window.location.href;
+const ISAEM = HREF.indexOf('mktcloud.c.huawei.com/sites.html') >= 0;
+let mousePos = {
+	x: 0,
+	y: 0,
+};
+
+function Throttle(fn, wait = 1000, options = {}) {
+	let timer;
+	let previous = 0;
+	let throttled = function () {
+		let now = +new Date();
+		// remaining 不触发下一次函数的剩余时间
+		if (!previous && options.leading === false) previous = now;
+		let remaining = wait - (now - previous);
+		if (remaining < 0) {
+			if (timer) {
+				clearTimeout(timer);
+				timer = null;
+			}
+			previous = now;
+			fn.apply(this, arguments)
+		} else if (!timer && options.trailing !== false) {
+			timer = setTimeout(() => {
+				previous = options.leading === false ? 0 : new Date().getTime();
+				timer = null;
+				fn.apply(this, arguments);
+			}, remaining);
+		}
+	}
+	return throttled;
 }
 
-function handleKey(e, s, c) {
+function UpdateMousePos(e) {
+	mousePos.x = e.clientX || e.offsetX || e.layerX;
+	mousePos.y = e.clientY || e.offsetY || e.layerY;
+}
+
+function HandleKey(e, s, c) {
 	let isShift, isAlt, isCtrl, pressedAlt, pressedCtrl, pressedShift, kc, rKeys, rKey, isKey;
 	kc = e.keyCode || e.which || e.charCode;
 	rKeys = s.split('+');
@@ -174,14 +211,42 @@ function handleKey(e, s, c) {
 		c();
 	}
 }
+
+function GetAllEles(s) {
+	return [].slice.call(document.querySelectorAll(s));
+}
+
+function ScrollUp(s, x, b = true) {
+	let doms = GetAllEles(s);
+	doms.some(function (e) {
+		let eb = e.getBoundingClientRect();
+		let eX = eb.x || eb.left;
+		let eW = eb.width;
+		let eH = eb.height;
+		if (x >= eX && x <= eX + eW) {
+			e.scrollTo({
+				top: b ? e.scrollTop - eH : e.scrollTop + eH,
+				behavior: 'smooth',
+			});
+			console.info(e.scrollTop + eH);
+			return true;
+		}
+	});
+}
 let keyToFun = {
 	'alt+w': function () {
 		console.info('----Scroll to Top');
 		window.scrollTo(0, 0);
+		if (ISAEM) {
+			ScrollUp('coral-columnview-column-content', mousePos.x);
+		}
 	},
 	'alt+x': function () {
 		console.info('----Scroll to Bottom');
 		window.scrollTo(0, document.body.scrollHeight || document.body.clientHeight);
+		if (ISAEM) {
+			ScrollUp('coral-columnview-column-content', mousePos.x, false);
+		}
 	},
 	'alt+c': function () {
 		console.info('----Copy URL...');
@@ -194,18 +259,15 @@ let keyToFun = {
 			document.body.removeChild(tInput);
 		}
 	},
-	'alt+a': function () {
-		console.info('----Copy URL...');
-		if (document.execCommand) {
-			let tInput = document.createElement('input');
-			tInput.value = window.location.href;
-			document.body.appendChild(tInput);
-			tInput.select();
-			console.info(document.execCommand('copy') ? 'Copied!' : 'Copy failed!');
-			document.body.removeChild(tInput);
-		}
+	'shift+r': function () {
+		console.info('----Clear all browser data');
 	},
 }
+let throttleMousePos = Throttle(UpdateMousePos, 200);
 document.addEventListener('keydown', function (e) {
-	Object.keys(keyToFun).map(k => handleKey(e, k, keyToFun[k]));
+	Object.keys(keyToFun).map(k => HandleKey(e, k, keyToFun[k]));
+});
+document.body.addEventListener('mousemove', function (e) {
+	e = e || window.event;
+	throttleMousePos(e);
 });
