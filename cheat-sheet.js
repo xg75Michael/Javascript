@@ -83,7 +83,9 @@ window.lazySizesConfig = window.lazySizesConfig || {},
 // lazysize 懒加载 简单的设置
 // 简写原生的方法，方便使用
 // window.requestAnimationFrame(callback) 会给callback传递精度为1ms的时间戳
-let thRAF = window.requestAnimationFrame || setTimeout;
+let thRAF = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function (callback) {
+	window.setTimeout(callback, 1000 / 60);
+};
 let forEach = Array.prototype.forEach;
 // 简写原生的方法，方便使用
 // 扩展原生对象 数组等方法
@@ -106,24 +108,32 @@ Object.defineProperties(Array.prototype, {
 	}
 });
 // 扩展原生对象 数组等方法
-// init 获取设备的状态信息，放在 DOMContentLoaded 事件里 
+// js 参考模板
 (function () {
 	const UA = navigator.userAgent,
 		KERNELLIST = ['', '-webkit-', '-ms-', '-moz-', '-o-'],
 		MEDIASTR = '(max-aspect-ratio: 11/10)',
-		SHELL = document.getElementById('cez-container'),
-		STICKYSTR = 'sticky-cntr';
-	let thRAF = window.requestAnimationFrame || setTimeout,
-		wechatImg = 'https://consumer.huawei.com/content/dam/huawei-cbg-site/greate-china/cn/mkt/pdp/visions/v-2021/img/intro/th-wechat.jpg',
+		SHELL = document.getElementById('cez-container');
+	let thRAF = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function (callback) {
+			window.setTimeout(callback, 1000 / 60);
+		},
+		wechatImg = 'https://consumer.huawei.com/content/dam/huawei-cbg-site/greate-china/cn/mkt/pdp/monitors/cezanne/imgs/huawei-matestation-x-wechat-share.jpg',
 		wechatTxt = '谢谢分享。',
-		gaSelector = '.cmn-ga-21',
+		gaClass = 'cmn-ga-21',
 		popVideo = '.cmn-pop-video',
 		triggerVideo = '.cmn-trigger-video',
 		noVideo = 'cmn-notrg-video',
-		scrollSelect = '.cmn-click-scroll',
+		scrollSelector = '.cmn-click-scroll',
+		scrollClass = 'click-scroll-active',
+		stickySelector = '.cmn-sticky',
+		obDOMSelector = '.cmn-ob-class',
+		obAddClass = 'cmn-trigger',
+		willChangeClass = 'will-change',
+		fbClass = 'static-fb',
 		ctlr = !!window.ScrollMagic ? new ScrollMagic.Controller() : null;
 
 	function Glean(c) {
+		window.NodeList && !NodeList.prototype.forEach && (NodeList.prototype.forEach = Array.prototype.forEach);
 		this.d = {
 			isIE: !!window.ActiveXObject || 'ActiveXObject' in window,
 			isOEdge: /Edge\//i.test(UA),
@@ -145,9 +155,10 @@ Object.defineProperties(Array.prototype, {
 		this.c = {
 			hasWebp: document.createElement('canvas').toDataURL('image/webp').indexOf('data:image/webp') == 0,
 			hasIO: 'IntersectionObserver' in window && 'IntersectionObserverEntry' in window && 'intersectionRatio' in window.IntersectionObserverEntry.prototype,
+			hasMO: !!window.MutationObserver || !!window.WebKitMutationObserver || !!window.MozMutationObserver,
 			hasCSS: !!window.CSS && !!window.CSS.supports,
-			hasCSSVar: !!window.CSS && !!window.CSS.supports && window.CSS.supports('--a', 0),
-			hasSticky: !!document.querySelector(STICKYSTR) ? /sticky/i.test(window.getComputedStyle(document.querySelector(STICKYSTR)).position) : (function () {
+			hasCSSVar: !!window.CSS && !!window.CSS.supports && (window.CSS.supports('--a', 0) || window.CSS.supports('(--a: 0)')),
+			hasSticky: !!document.querySelector(stickySelector) ? /sticky/i.test(window.getComputedStyle(document.querySelector(stickySelector)).position) : (function () {
 				let len = KERNELLIST.length,
 					el = document.createElement('div');
 				for (let i = 0; i < len; i++) {
@@ -158,64 +169,81 @@ Object.defineProperties(Array.prototype, {
 				}
 				return false;
 			})(),
+			hasAsync: (function () {
+				let func;
+				try {
+					eval("func = async function(){};");
+				} catch (e) {
+					return false;
+				}
+				return Object.getPrototypeOf(func).constructor != null;
+			})(),
+			hasPromise: typeof Promise !== "undefined" && Promise.toString().indexOf("[native code]") !== -1,
 		};
-		this.p = {
-			isLogin: !!$.cookie('_ext_u_e_'),
-		};
+		this.p = {};
 		this.custom = !!c ? c : null;
 	}
-	let McGlean = new Glean();
 	Glean.prototype = {
 		constructor: Glean,
-		_init: function () {
-			this.getStatus();
-			this.initWechat(McGlean.d.isWechat, wechatImg, wechatTxt);
-			this.addGa(gaSelector);
-		},
-		test: function () {
-			console.info('testing');
-		},
-		getStatus: function () {
+		_getStatus: function () {
+			this.width = window.innerWidth;
+			this.height = window.innerHeight;
 			this.vw = window.innerWidth / 100;
 			this.vh = window.innerHeight / 100;
 			this.cw = document.documentElement.clientWidth;
 			this.ch = document.documentElement.clientHeight;
 			this.isPortrait = window.matchMedia(MEDIASTR).matches;
-			this.navH = !!document.getElementById('second-navigation-v4') ? document.getElementById('second-navigation-v4').getBoundingClientRect().height : !!document.querySelector('.huawei-v3 .second-navigation') ? document.querySelector('.huawei-v3 .second-navigation').getBoundingClientRect().height : window.innerWidth < 992 ? 96 : 76;
+			this.navH = !!document.getElementById('second-navigation-v4') ? document.getElementById('second-navigation-v4').getBoundingClientRect().height : !!document.querySelector('.huawei-v3 .second-navigation') ? document.querySelector('.huawei-v3 .second-navigation').getBoundingClientRect().height : 0;
 			this.pixelRatio = window.devicePixelRatio || 1;
-		},
-		prefixNumb: function (num, n) {
-			return (Array(n).join(0) + num).slice(-n);
-		},
-		getOffsetTop: function (el, cls) {
-			if (el.className.indexOf(cls) > -1) {
-				return this.navH;
+			if (this.c.hasCSSVar) {
+				SHELL.style.setProperty('--cez-nav', this.navH + 'px');
 			}
-			return el.offsetTop + this.getOffsetTop(el.parentNode);
 		},
-		clickScorll: function () {
-			console.info(1);
-			// 把心动的理由和disclaimer的跳转合成一个 data-target
-			$('.disclaimer-link').each(function () {
-				let sTop;
-				$(this).on('click', function (e) {
-					e.preventDefault();
-					let el = $($(this).attr('href'));
-					$('.disclaimer-item').removeClass('active');
-					el.addClass('active');
-					sTop = el.offset().top - navH - 100;
-					$('html, body').animate({
-						scrollTop: sTop,
-					}, 500, function () {
-						sTop = el.offset().top - navH - 100;
-						$('html, body').animate({
-							scrollTop: sTop,
-						}, 50.1);
-					});
+		_fallback: function () {
+			(this.d.isIE || this.d.isOEdge) && SHELL.classList.add(fbClass);
+		},
+		_popVideo: function (s) {
+			$(s).on('click', function (e) {
+				e.preventDefault();
+				$(this).initH5player({
+					'path': '',
+					'target': 'fancybox',
+					'autostart': true,
+					'beforeShow': '',
+					'afterClose': '',
 				});
 			});
 		},
-		initWechat: function (is, img, t) {
+		_triggerVideo: function (c, s) {
+			let m = this.isPortrait;
+			let u = this.d.isUC || this.d.isWechat;
+			$(s).each(function () {
+				if (u) {
+					c.classList.add(noVideo);
+				} else {
+					let t = $(this);
+					let a = t.find('source');
+					t.attr('poster', m ? t.attr('data-xs-poster') : t.attr('data-lg-poster'));
+					a.attr('src', m ? a.attr('data-xs-src') : a.attr('data-lg-src'));
+					setTimeout(function () {
+						t.trigger('load');
+						new ScrollMagic.Scene({
+								triggerElement: t[0],
+								duration: '100%',
+								triggerHook: .5,
+							}).on('enter', function (e) {
+								let f = t.attr('hasPlayed');
+								if (t[0].paused && !f) {
+									t.attr('hasPlayed', true);
+									t[0].play();
+								}
+							})
+							.addTo(ctlr);
+					}, 100);
+				}
+			});
+		},
+		_initWechat: function (is, img, t) {
 			if (is) {
 				$.getScript('//res.wx.qq.com/open/js/jweixin-1.2.0.js', function (res, status) {
 					if (status == 'success') {
@@ -240,8 +268,8 @@ Object.defineProperties(Array.prototype, {
 				});
 			}
 		},
-		addGa: function (s) {
-			$(s).on('click', function () {
+		_addGa: function (s) {
+			$('.' + s).on('click', function () {
 				let attrs = this.attributes,
 					data = {};
 				for (let i = 0; i < attrs.length; i++) {
@@ -255,34 +283,134 @@ Object.defineProperties(Array.prototype, {
 				window.dataLayer && window.dataLayer.push(data);
 			});
 		},
-		popVideo: function (s) {
-			$(s).on('click', function (e) {
-				e.preventDefault();
-				$(this).initH5player({
-					'path': '',
-					'target': 'fancybox',
-					'autostart': true,
-					'beforeShow': '',
-					'afterClose': '',
+		_clickScorll: function (s, offset, speed) {
+			let t = this,
+				ofst = Math.floor(typeof offset == 'number' ? offset || 0 : parseFloat(offset) * (/vw/.test(offset) ? t.vw : t.vh)),
+				spd = speed || 10,
+				flag = true;
+			SHELL.querySelectorAll(s).forEach(function (e) {
+				e.addEventListener('click', function (e) {
+					let time = performance.now();
+					e.preventDefault();
+					e.stopPropagation();
+					let target = t._getDataset(this)['target'];
+					if (!!target && flag) {
+						let et = SHELL.querySelector(target),
+							cTop,
+							tTop,
+							dis,
+							max = (document.body.clientHeight || document.documentElement.scrollHeight) - window.innerHeight - 1;
+						flag = false;
+						t._toArray(et.parentElement.children).forEach(function (e) {
+							e.classList.remove(scrollClass);
+						});
+						et.classList.add(scrollClass);
+
+						function steps() {
+							cTop = document.documentElement.scrollTop || document.body.scrollTop;
+							tTop = Math.floor(t._getOffsetTop(et)) - t.navH - ofst;
+							tTop = tTop > max ? max : tTop;
+							dis = tTop - cTop;
+							if (Math.abs(dis) > 5) {
+								let addNumb = cTop > tTop ? -2 : 2;
+								window.scrollTo(0, cTop + dis / spd + addNumb);
+								thRAF(steps);
+							} else {
+								window.scrollTo(0, tTop);
+								flag = true;
+								et = null;
+							}
+						}
+						thRAF(steps);
+					}
+				})
+			});
+		},
+		_obAddClass: function (s, m, t, c) {
+			if (this.c.hasIO) {
+				let ob = new IntersectionObserver(function (changes) {
+					changes.forEach(function (d) {
+						if (0 < d.intersectionRatio && d.target.className.indexOf(c) < 0) {
+							d.target.classList.add(c);
+						}
+					});
+				}, {
+					rootMargin: m,
+					threshold: t,
 				});
-			});
+				SHELL.querySelectorAll(s).forEach(function (e) {
+					ob.observe(e);
+				});
+				ob = null;
+			}
 		},
-		triggerVideo: function (c, s) {
-			let f = this.isPortrait;
-			let u = this.d.isUC || this.d.isWechat;
-			$(s).each(function () {
-				if (u) {
-					c.classList.add(noVideo);
+		_zoom: function (s) {
+			return Math.max(this.width / SHELL.querySelector(s).getBoundingClientRect().width, this.height / SHELL.querySelector(s).getBoundingClientRect().height) + (this.isPortrait ? .3 : .03);
+		},
+		_float: function (numb, n) {
+			return Math.floor(numb * Math.pow(10, n)) / Math.pow(10, n);
+		},
+		_prefixNumb: function (num, n) {
+			return (Array(n).join(0) + num).slice(-n);
+		},
+		_getOffsetTop: function (t) {
+			let top = 0;
+			while (t.offsetParent) {
+				top += t.offsetTop
+				t = t.offsetParent
+			}
+			return top;
+		},
+		_getDataset: function (ele) {
+			if (!!ele) {
+				if (ele.dataset) {
+					return ele.dataset;
 				} else {
-					let t = $(this);
-					let a = t.find('source');
-					t.attr('poster', f ? t.attr('data-xs-poster') : t.attr('data-lg-poster'));
-					a.attr('src', f ? a.attr('data-xs-src') : a.attr('data-lg-src'));
-					t.trigger('load');
+					let attrs = ele.attributes,
+						dataset = {},
+						name,
+						matchStr;
+					for (let i = 0; i < attrs.length; i++) {
+						matchStr = attrs[i].name.match(/^data-(.+)/);
+						if (matchStr) {
+							name = matchStr[1].replace(/-([\da-z])/gi, function (all, l) {
+								return l.toUpperCase();
+							});
+							dataset[name] = attrs[i].value;
+						}
+					}
+					return dataset;
 				}
-			});
+			}
 		},
-		ease: {
+		_getMaxHeight: function (s) {
+			return this._float([].slice.call(document.querySelectorAll(s)).reduce(function (p, n) {
+				return p.getBoundingClientRect().height > n.getBoundingClientRect().height ? p : n;
+			}).getBoundingClientRect().height, 2);
+		},
+		_toArray: function (a) {
+			return Array.prototype.slice.call(a);
+		},
+		_willchange: function (s1) {
+			if (this.c.hasIO) {
+				let ob = new IntersectionObserver(function (changes) {
+					changes.forEach(function (d) {
+						if (0 < d.intersectionRatio) {
+							SHELL.querySelector('.' + willChangeClass) && SHELL.querySelector('.' + willChangeClass).classList.remove(willChangeClass);
+							d.target.classList.add(willChangeClass);
+						}
+					});
+				}, {
+					rootMargin: '-49% 0% -49% 0%',
+					threshold: [0],
+				});
+				SHELL.querySelectorAll(s1).forEach(function (e) {
+					ob.observe(e);
+				});
+				ob = null;
+			}
+		},
+		_ease: {
 			oneBezier: function () {
 				return function (t) {
 					let y = t;
@@ -290,32 +418,299 @@ Object.defineProperties(Array.prototype, {
 				}
 			},
 			twoBezier: function (cp) {
-				const [cx, cy] = cp;
-				return function (t) {
-					let y = 2 * t * (1 - t) * cy + t * t;
-					return y;
+				if (cp instanceof Array) {
+					const cx = cp[0] || 0,
+						cy = cp[1] || 0;
+					return function (t) {
+						let y = 2 * t * (1 - t) * cy + t * t;
+						return y;
+					}
 				}
 			},
 			threeBezier: function (cp1, cp2) {
-				const [cx1, cy1] = cp1;
-				const [cx2, cy2] = cp2;
-				return function (t) {
-					let y = 3 * cy1 * t * (1 - t) * (1 - t) + 3 * cy2 * t * t * (1 - t) + t * t * t;
-					return y;
+				if (cp1 instanceof Array && cp2 instanceof Array) {
+					const cx1 = cp1[0] || 0,
+						cy1 = cp1[1] || 0,
+						cx2 = cp2[0] || 0,
+						cy2 = cp2[1] || 0;
+					return function (t) {
+						let y = 3 * cy1 * t * (1 - t) * (1 - t) + 3 * cy2 * t * t * (1 - t) + t * t * t;
+						return y;
+					}
 				}
 			},
+		},
+		_getTiming: function () {
+			let t = window.performance.timing;
+			return [{
+					key: "Redirect",
+					desc: "网页重定向的耗时",
+					"value(ms)": t.redirectEnd - t.redirectStart
+				},
+				{
+					key: "AppCache",
+					desc: "检查本地缓存的耗时",
+					"value(ms)": t.domainLookupStart - t.fetchStart
+				},
+				{
+					key: "DNS",
+					desc: "DNS查询的耗时",
+					"value(ms)": t.domainLookupEnd - t.domainLookupStart
+				},
+				{
+					key: "TCP",
+					desc: "TCP链接的耗时",
+					"value(ms)": t.connectEnd - t.connectStart
+				},
+				{
+					key: "Waiting(TTFB)",
+					desc: "从客户端发起请求到接收响应的时间",
+					"value(ms)": t.responseStart - t.requestStart
+				}, {
+					key: "Content Download",
+					desc: "下载服务端返回数据的时间",
+					"value(ms)": t.responseEnd - t.responseStart
+				},
+				{
+					key: "HTTP Total Time",
+					desc: "http请求总耗时",
+					"value(ms)": t.responseEnd - t.requestStart
+				},
+				{
+					key: "First Time",
+					desc: "首包时间",
+					"value(ms)": t.responseStart - t.domainLookupStart
+				},
+				{
+					key: "White screen time",
+					desc: "白屏时间",
+					"value(ms)": t.responseEnd - t.fetchStart
+				},
+				{
+					key: "Time to Interactive(TTI)",
+					desc: "首次可交互时间",
+					"value(ms)": t.domInteractive - t.fetchStart
+				},
+				{
+					key: "DOM Parsing",
+					desc: "DOM 解析耗时",
+					"value(ms)": t.domInteractive - t.responseEnd
+				},
+				{
+					key: "DOMContentLoaded",
+					desc: "DOM 加载完成的时间",
+					"value(ms)": t.domInteractive - t.navigationStart
+				},
+				{
+					key: "Loaded",
+					desc: "页面load的总耗时",
+					"value(ms)": t.loadEventEnd - t.navigationStart
+				}
+			];
+		},
+	};
+	let McGlean = new Glean();
+	// sections
+	gsap.defaults({
+		duration: 1,
+		ease: Power2.easeOut,
+	});
+	McGlean.switchIndex = function (s1, s2, t, p) {
+		SHELL.querySelectorAll(s1).forEach(function (e, i) {
+			e.addEventListener('click', function () {
+				if (!!t && !!p) {
+					clearTimeout(t[p]);
+				}
+				SHELL.querySelector(s2).dataset.index = i + 1;
+			});
+		});
+	};
+	McGlean.mutationObIndex = function (s1, btns, time, obj, p) {
+		let obed = SHELL.querySelector(s1);
+		let numb = SHELL.querySelectorAll(btns).length;
+		let muOb = new MutationObserver(function (list, observer) {
+			list.forEach(function (e) {
+				if (e.type === 'attributes') {
+					obj[p] = setTimeout(function () {
+						let i = Number(e.target.dataset.index) + 1;
+						e.target.dataset.index = i > numb ? 1 : i;
+					}, time);
+				}
+			});
+		});
+		muOb.observe(obed, {
+			attributes: true,
+			attributeFilter: ['class', 'data-index'],
+			childList: false,
+			subtree: false,
+		});
+	};
+	McGlean.flsc = function () {
+		let zoomout = this._float(this._zoom('#flsc-cntr .flsc-trigger-video'), 3);
+		let zoomin = this._float(Math.min((this.height - this.navH) / (1.3 * this.width), this.isPortrait ? .8501 : .441), 3);
+		let frameH = Math.floor((this.isPortrait ? 1.063 : 1.05625) * this.width * zoomin);
+		if (this.c.hasCSSVar) {
+			SHELL.querySelector('#flsc-cntr').style.setProperty('--flsc-scale', zoomout);
+			SHELL.querySelector('#flsc-cntr').style.setProperty('--flsc-frameH', frameH + 'px');
+		}
+		let flsc = gsap.timeline().set('.flsc-content-cntr', {
+			overflow: 'hidden',
+		}).to('.flsc-content-cntr', {
+			y: 0,
+		}).set('.flsc-cntr', {
+			backgroundColor: '#000',
+		}).set('.flsc-img-frame, .flsc-bg-cntr', {
+			autoAlpha: 1,
+		}).set('.flsc-title', {
+			autoAlpha: 0,
+		}).to('.flsc-content', {
+			scale: zoomin,
+		}).set('.flsc-content-cntr', {
+			overflow: 'visible',
+		}).to('.flsc-img-shadow', {
+			autoAlpha: 1,
+		});
+		new ScrollMagic.Scene({
+				triggerElement: '.flsc-cntr',
+				duration: '300%',
+				triggerHook: 0,
+			})
+			.setTween(flsc)
+			.addTo(ctlr);
+	};
+	McGlean.idv = function () {
+		let v = SHELL.querySelector('.idv-trigger-video video');
+		let btn = SHELL.querySelector('.idv-play-inner');
+		v.addEventListener('ended', function () {
+			btn.classList.add('video-ended');
+		});
+		btn.addEventListener('click', function () {
+			this.classList.remove('video-ended');
+			v.play();
+		});
+	};
+	McGlean.idimg = function () {
+		new Swiper('.idimg-swiper-cntr', {
+			speed: 1000,
+			autoplay: false,
+			effect: 'fade',
+			loop: true,
+			pagination: {
+				el: '.idimg-swiper-navs',
+				clickable: true,
+				renderBullet: function (i, c) {
+					let id = i + 1;
+					let txt = $('.idimg-swiper-navs').attr('data-pagination-' + id);
+					return '<div class="idimg-pagination ' + c + '"><span class="' + gaClass + ' idimg-icon-cntr idimg-icon-cntr-' + id + '" data-ga-event="productBtnClicks" data-ga-button-name="' + txt + '" data-ga-product-mkt-name="HUAWEI MateStation X"><span class="idimg-icon idimg-icon-' + id + '"></span></span><p class="idimg-icon-txt idimg-icon-txt-' + id + '">' + txt + '</p></div>';
+				},
+			},
+		});
+	};
+	McGlean.adjus = function () {
+		let adjus = gsap.timeline().to('.adjus-video-cntr', {
+			autoAlpha: this._getDataset(SHELL.querySelector('.adjus-video-cntr'))['opacity'] || .25,
+		}, '1').to('.adjus-title', {
+			autoAlpha: 1,
+			y: 0,
+		}, '-=1');
+		new ScrollMagic.Scene({
+				triggerElement: '.adjus-inner',
+				duration: '100%',
+				triggerHook: 0,
+			})
+			.setTween(adjus)
+			.addTo(ctlr);
+	};
+	McGlean.galle = function () {
+		new Swiper('.galle-swiper-cntr', {
+			speed: 1000,
+			autoplay: {
+				disableOnInteraction: false,
+			},
+			loop: true,
+			loopAdditionalSlides: 3,
+			slidesPerView: this.isPortrait ? 1 : 1.464,
+			centeredSlides: true,
+			navigation: {
+				nextEl: '.galle-btn-right',
+				prevEl: '.galle-btn-left',
+			},
+			pagination: {
+				el: '.galle-pagination',
+				clickable: true,
+			},
+		});
+	};
+	McGlean.sharet = function () {
+		this['sharetid'] = null;
+		this._obAddClass('.sharet-inner', '0% 0% -70% 0%', [0], obAddClass);
+		this.switchIndex('.sharet-desc', '.sharet-inner', this, 'sharetid');
+		if (this.c.hasMO) {
+			this.mutationObIndex('.sharet-inner', '.sharet-dynamic-inner .sharet-desc-item', 5000, this, 'sharetid');
+		}
+		if (this.c.hasCSSVar) {
+			SHELL.querySelector('#sharet-cntr').style.setProperty('--typing-width', Math.floor(SHELL.querySelector('.sharet-txt-2').getBoundingClientRect().width) + 'px');
+		}
+		if (this.isPortrait) {
+			SHELL.querySelector('.sharet-desc-cntr').style.marginBottom = this._getMaxHeight('.sharet-desc-t') + 'px';
 		}
 	};
-	McGlean.__proto__ = Glean.prototype;
-	console.info(McGlean);
-	McGlean._init();
+	McGlean.smtcn = function () {
+		SHELL.querySelector('.smtcn-btntxt').style.height = this._getMaxHeight('.smtcn-btntxt') + 'px';
+		this['smtcnid'] = null;
+		this._obAddClass('.smtcn-imgs-cntr-2', '0% 0% -70% 0%', [0], obAddClass);
+		this.switchIndex('.smtcn-btn', '.smtcn-imgs-cntr-2', this, 'smtcnid');
+		if (this.c.hasMO) {
+			this.mutationObIndex('.smtcn-imgs-cntr-2', '.smtcn-imgs-dynamic-2 .smtcn-btn', 5000, this, 'smtcnid');
+		}
+	};
+	McGlean.servc = function () {
+		let h = this._getMaxHeight('.servc-icon-desc');
+		SHELL.querySelectorAll('.servc-icon-desc').forEach(function (e) {
+			e.style.height = h + 'px';
+		});
+	};
+	McGlean._init = function () {
+		// common
+		this._getStatus();
+		this._fallback();
+		this._popVideo(popVideo);
+		this._triggerVideo(SHELL, triggerVideo);
+		this._initWechat(McGlean.d.isWechat, wechatImg, wechatTxt);
+		this._clickScorll(scrollSelector, 0, 7);
+		this._obAddClass(obDOMSelector, '0% 0% -50% 0%', [0], obAddClass);
+		this._willchange('.sec-cntr');
+		// sections
+		this.idv();
+		this.idimg();
+		this.galle();
+		this.servc();
+		if (this.d.isIE || this.d.isOEdge) {
 
-	document.addEventListener('DOMContentLoaded', function () {
-		McGlean._init();
-	});
-	window.addEventListener('resize', function () {});
+		} else {
+			this.flsc();
+			this.adjus();
+			this.sharet();
+			this.smtcn();
+		}
+		this._addGa(gaClass);
+		// clear memery
+		this.flsc = null;
+		this.idv = null;
+		this.idimg = null;
+		this.adjus = null;
+		this.galle = null;
+		this.sharet = null
+		this.smtcn = null;
+		this.servc = null;
+		this.switchIndex = null;
+		this.mutationObIndex = null;
+	}
+	McGlean._init();
+	window.addEventListener('resize', function (t) {
+		return function () {}
+	}(McGlean));
 })();
-// init 获取设备的状态信息，放在 DOMContentLoaded 事件里 
 // 图片模板
 {
 	/* <picture>
@@ -348,7 +743,6 @@ function thCreateTransOb() {
 		thCanOb.observe(e);
 	});
 }
-// IntersectionObserver
 // 阻止冒泡
 function xxx(e) {
 	e.stopPropagation();
@@ -476,6 +870,7 @@ $('.cbg-icon-backtotop').off().click(function () {
 });
 // 华为 EN Back to Top
 // 角标跳转不准的解决方案 JQ 使用回调函数，在上一个跳转动画结束之后再进行判断再跳转，无缝衔接
+// 点击本页跳转动画参照上面的 McGlean
 function scrollSteps() {
 	if (Math.abs($('.disclaimer').offset().top - $(window).scrollTop()) > 10) {
 		theTop = $('.disclaimer').offset().top;
@@ -652,6 +1047,11 @@ function h5LocationForServiceCenter() {
 	}
 }
 // https://consumer.huawei.com/cn/support/service-center/ 页面 LBS 百度地图定位
+// video 的 timeupdate 事件可以实时监听播放进度来做对应的动画，4-66次/s 的触发频率
+const video = document.querySelector('video');
+video.addEventListener('timeupdate', (event) => {
+	console.log('The currentTime attribute has been updated. Again.');
+});
 // 快速遍历的方法， forEach 兼容 IE
 ['aaa', 'bbb'].forEach(function (e, i) {
 	console.info(e);
@@ -759,6 +1159,10 @@ function canDrawCoverImg() {
 		ctx.drawImage(tempImg, 0, (imgH - canH / canW * imgW) / 2, imgW, canH / canW * imgW, 0, 0, canW, canH) :
 		ctx.drawImage(tempImg, (imgW - imgH / canH * canW) / 2, 0, imgH / canH * canW, imgH, 0, 0, canW, canH);
 }
+// canvas 实现音频可视化可直接用 Web Audio API 来获取对应的音频数据
+// https://developer.mozilla.org/zh-CN/docs/Web/API/Web_Audio_API/Visualizations_with_Web_Audio_API
+window.AudioContext = window.AudioContext || window.webkitAudioContext || window.mozAudioContext || window.msAudioContext;
+var context = new window.AudioContext();;
 
 // 相关变量声明的高级写法，面向对象的写法
 let smObj = {
@@ -913,6 +1317,62 @@ function binaryAgent(str) {
 	})
 	return r;
 }
+// 箭头函数 this 的指向是上上一层
+() => {};
+// 结构
+[a, b] = [b, a];
+// async 关键字声明的函数是异步函数，比 Promise 更加简洁， await 关键字必须在 async 函数里面
+function after2s() {
+	console.info('after2s run')
+	// 2s 之后才调用完成并打印文字
+	// 需要使用 Promise
+	return new Promise(resolve => {
+		setTimeout(() => {
+			resolve('resolved');
+			console.info('after2s end')
+		}, 2000);
+	});
+}
+async function asyncCall() {
+	console.info('--asyncCall run');
+	// 等待 after2s 执行完了之后再继续
+	await after2s();
+	console.info('--asyncCall end');
+}
+asyncCall();
+// js 判断是否支持 async 关键字声明函数
+function isAsyncAwaitSupport() {
+	let func;
+	try {
+		eval("func = async function(){};");
+	} catch (e) {
+		return false;
+	}
+	return Object.getPrototypeOf(func).constructor != null;
+}
+// js 判断浏览器是否支持 promise
+hasPromise = typeof Promise !== "undefined" && Promise.toString().indexOf("[native code]") !== -1;
+// 逗号操作符返回的是后者，前面只是计算而已，为了 'get a value not a reference'
+// https://stackoverflow.com/questions/5161502/indirect-function-call-in-javascript/5161574#5161574
+(0, 1); // 1
+('foo', 'bar'); // 'bar'
+var foo = 'global.foo';
+var obj = {
+	foo: 'obj.foo',
+	method: function () {
+		return this.foo;
+	}
+};
+obj.method(); // "obj.foo"
+(1, obj.method)(); // "global.foo"
+
+// (0, eval)('this') 可以在 es5 中的严格 strict 模式把 this 重新指定给 window
+'use strict';
+_global = (function () {
+	return this || (0, eval)('this');
+}());
+
+
 
 // PTT 油猴
 // ==UserScript==
